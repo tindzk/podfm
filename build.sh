@@ -4,7 +4,7 @@ mkdir -p build/{podfm,Jivai}
 
 ../Jivai-Utils/jutils.bin \
 	build                 \
-	output=podcm.bin      \
+	output=podfm.bin      \
 	main=src/Main.c       \
 	include=../Jivai/src  \
 	map=src:build/podfm   \
