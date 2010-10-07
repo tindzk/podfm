@@ -2,7 +2,10 @@
 
 static ProviderInfo* providers[] = {
 	/* French */
-	&Providers_RFI_Info
+	&Providers_RFI_Info,
+
+	/* General */
+	&Providers_RSS_Info
 };
 
 def(void, Init, Logger *logger, Storage *storage) {

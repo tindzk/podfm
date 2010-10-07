@@ -3,19 +3,11 @@
 }
 
 .chapter[Introduction] {
-	.p {
-		podfm is an extensible podcatcher for the console. It
-		provides the possibility to write provider-specific plugins.
-		This is especially useful when providers offer additional
-		content such as transcriptions which general-purpose
-		podcatchers usually ignore.
-	}
-
-	.p {
-		Currently the only supported provider is
-		.url[http://www.rfi.fr/]{RFI}. An Atom/RSS plugin is
-		planned to support a wider range of providers.
-	}
+	podfm is an extensible podcatcher for the console. It
+	provides the possibility to write provider-specific plugins.
+	This is especially useful when providers offer additional
+	content such as transcriptions which general-purpose
+	podcatchers usually ignore.
 }
 
 .chapter[Requirements] {
@@ -63,43 +55,78 @@
 			...
 	}
 
-	As for RFI, the file may look like:
-
-	.code {
-		rfi:
-			Podcast_DANSE
-			Podcast_SAV
-			Podcast_VEN
-			journalFrancaisFacile
-			rss_apprendre_francais
-	}
-
-	.note {
-		This layout stores the selected podcasts in one directory,
-		.path{rfi}. If this isn't desired, you may also break them
-		up into multiple sections:
+	.section[RFI plugin] {
+		As for RFI, the file may look like:
 
 		.code {
-			rfi: RFI Group 1
+			rfi:
 				Podcast_DANSE
 				Podcast_SAV
-
-			rfi: RFI Group 2
 				Podcast_VEN
+				journalFrancaisFacile
+				rss_apprendre_francais
 		}
 
-		If you don't label each section differently, the separation
-		won't have any effect.
+		.note {
+			This layout stores the selected podcasts in one directory,
+			.path{rfi}. If this isn't desired, you may also break them
+			up into multiple sections:
+
+			.code {
+				rfi: RFI Group 1
+					Podcast_DANSE
+					Podcast_SAV
+
+				rfi: RFI Group 2
+					Podcast_VEN
+			}
+
+			If you don't label each section differently, the separation
+			won't have any effect.
+		}
 	}
 
-	To synchronize, just run:
+	.section[RSS plugin] {
+		The RSS plugin needs to be used like this:
 
-	.command {
-		./podfm.bin /mnt/ipod
+		.code {
+			rss: ecoute
+				url: http://www.ecoute.de/podcast/rss.xml
+
+			rss: tagesschau
+				url: http://www.tagesschau.de/export/podcast/tagesthemen/
+				url: http://www.tagesschau.de/export/podcast/tagesschau/
+		}
+
+		.warning {
+			.keyword{url} is necessary because the configuration parser
+			will strip .keyword{http} from the URL when nothing else is
+			prepended.
+		}
 	}
 
-	Consequently, the cache file as well as the podcasts will be
-	stored in the given path.
+	.section[Synchronize] {
+		To synchronize, just run:
+
+		.command {
+			./podfm.bin /mnt/ipod
+		}
+
+		Consequently, the cache file as well as the podcasts will be
+		stored in the given path.
+	}
+}
+
+.chapter[Providers] {
+	Currently these providers are supported:
+
+	.list {
+		.item{.url[http://www.rfi.fr/]{RFI} (.keyword{rfi})}
+		.item{RSS (.keyword{rss})}
+	}
+
+	The RSS plugin only exists to cover those providers which aren't
+	supported by any specific plugin.
 }
 
 .chapter[License] {

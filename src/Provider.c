@@ -59,6 +59,15 @@ def(void, Retrieve) {
 			Integer_ToString(listing->len));
 
 		for (size_t j = 0; j < listing->len; j++) {
+			if (listing->buf[j].id.len == 0) {
+				Logger_LogFmt(this->logger, Logger_Level_Error,
+					$("[%/%] The ID is empty!"),
+					Integer_ToString(j + 1),
+					Integer_ToString(listing->len));
+
+				goto next;
+			}
+
 			Logger_LogFmt(this->logger, Logger_Level_Info,
 				$("[%/%] Fetching podcast '%' (%)..."),
 				Integer_ToString(j + 1),

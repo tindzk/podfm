@@ -5,6 +5,7 @@
 #import "Utils.h"
 #import "Storage.h"
 #import "Providers/RFI.h"
+#import "Providers/RSS.h"
 
 #undef self
 #define self Application
