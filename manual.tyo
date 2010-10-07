@@ -20,8 +20,8 @@
 
 .chapter[Requirements] {
 	.list {
-		.item{Jivai}
-		.item{Jivai-Utils}
+		.item{.url[../Jivai]{Jivai}}
+		.item{.url[../Jivai-Utils]{Jivai-Utils}}
 	}
 }
 
