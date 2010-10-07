@@ -194,9 +194,8 @@ def(void, Fetch, Downloader *dl, Podcast item) {
 }
 
 ProviderInfo ref(Info) = {
-	.id       = $("rfi"),
-	.readable = $("RFI"),
-	.methods  = {
+	.id      = $("rfi"),
+	.methods = {
 		.size        = sizeof(self),
 		.init        = (void *) &ref(Init),
 		.destroy     = (void *) &ref(Destroy),

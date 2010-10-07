@@ -16,8 +16,6 @@ typedef struct {
 
 typedef struct {
 	String id;
-	String readable;
-
 	ProviderInterface methods;
 } ProviderInfo;
 
