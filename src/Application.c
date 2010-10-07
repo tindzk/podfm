@@ -57,6 +57,11 @@ def(Provider *, AddProvider, String id) {
 def(void, Retrieve) {
 	for (size_t i = 0; i < this->providers->len; i++) {
 		ProviderInstance instance = this->providers->buf[i];
+
+		Logger_LogFmt(this->logger, Logger_Level_Info,
+			$("Processing provider '%'..."),
+			Provider_GetName(instance.provider));
+
 		Provider_Retrieve(instance.provider);
 	}
 }

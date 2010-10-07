@@ -34,12 +34,12 @@ typedef struct {
 		void *context;
 	} backend;
 
-	String providerId;
-
-	Cache cache;
+	String name;
 } self;
 
 def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String providerId);
 def(void, Destroy);
+def(String, GetName);
+def(void, SetName, String name);
 def(void, AddSource, String source);
 def(void, Retrieve);

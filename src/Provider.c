@@ -4,14 +4,12 @@ def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String
 	this->logger          = logger;
 	this->storage         = storage;
 	this->backend.methods = itf;
-	this->providerId      = String_Clone(providerId);
+	this->name            = String_Clone(providerId);
 
 	Array_Init(this->sources, 10);
 
 	this->backend.context = Memory_Alloc(itf->size);
 	itf->init(this->backend.context, this->logger);
-
-	Cache_Init(&this->cache, storage, logger, providerId);
 }
 
 def(void, Destroy) {
@@ -19,12 +17,18 @@ def(void, Destroy) {
 
 	Memory_Free(this->backend.context);
 
-	String_Destroy(&this->providerId);
+	String_Destroy(&this->name);
 
 	Array_Foreach(this->sources, String_Destroy);
 	Array_Destroy(this->sources);
+}
 
-	Cache_Destroy(&this->cache);
+def(String, GetName) {
+	return String_Disown(this->name);
+}
+
+def(void, SetName, String name) {
+	String_Copy(&this->name, name);
 }
 
 def(void, AddSource, String source) {
@@ -33,7 +37,10 @@ def(void, AddSource, String source) {
 
 def(void, Retrieve) {
 	Downloader dl;
-	Downloader_Init(&dl, this->storage, this->logger, this->providerId);
+	Downloader_Init(&dl, this->storage, this->logger, this->name);
+
+	Cache cache;
+	Cache_Init(&cache, this->storage, this->logger, this->name);
 
 	for (size_t i = 0; i < this->sources->len; i++) {
 		String source = this->sources->buf[i];
@@ -59,7 +66,7 @@ def(void, Retrieve) {
 				listing->buf[j].title,
 				listing->buf[j].id);
 
-			if (Cache_Has(&this->cache, listing->buf[j].id)) {
+			if (Cache_Has(&cache, listing->buf[j].id)) {
 				Logger_Log(this->logger, Logger_Level_Info,
 					$("Already in cache. Skipping..."));
 
@@ -69,7 +76,7 @@ def(void, Retrieve) {
 			this->backend.methods->fetch(this->backend.context,
 				&dl, listing->buf[j]);
 
-			Cache_Add(&this->cache, listing->buf[j].id);
+			Cache_Add(&cache, listing->buf[j].id);
 
 		next:
 			String_Destroy(&listing->buf[j].id);
@@ -82,4 +89,6 @@ def(void, Retrieve) {
 	}
 
 	Downloader_Destroy(&dl);
+
+	Cache_Destroy(&cache);
 }

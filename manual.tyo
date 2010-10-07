@@ -74,6 +74,24 @@
 			rss_apprendre_francais
 	}
 
+	.note {
+		This layout stores the selected podcasts in one directory,
+		.path{rfi}. If this isn't desired, you may also break them
+		up into multiple sections:
+
+		.code {
+			rfi: RFI Group 1
+				Podcast_DANSE
+				Podcast_SAV
+
+			rfi: RFI Group 2
+				Podcast_VEN
+		}
+
+		If you don't label each section differently, the separation
+		won't have any effect.
+	}
+
 	To synchronize, just run:
 
 	.command {
