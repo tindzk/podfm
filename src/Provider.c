@@ -6,6 +6,7 @@ def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String
 	this->backend.methods = itf;
 	this->name            = String_Clone(providerId);
 	this->limit           = -1;
+	this->inclDate        = true;
 
 	Array_Init(this->sources, 10);
 
@@ -36,6 +37,10 @@ def(void, SetLimit, ssize_t limit) {
 	this->limit = limit;
 }
 
+def(void, SetInclDate, bool value) {
+	this->inclDate = value;
+}
+
 def(void, AddSource, String source) {
 	Array_Push(this->sources, String_Clone(source));
 }
@@ -43,6 +48,7 @@ def(void, AddSource, String source) {
 def(void, Retrieve) {
 	Downloader dl;
 	Downloader_Init(&dl, this->storage, this->logger, this->name);
+	Downloader_SetInclDate(&dl, this->inclDate);
 
 	Cache cache;
 	Cache_Init(&cache, this->storage, this->logger, this->name);

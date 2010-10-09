@@ -6,10 +6,15 @@ def(void, Init, Storage *storage, Logger *logger, String providerId) {
 	this->storage    = storage;
 	this->logger     = logger;
 	this->providerId = String_Clone(providerId);
+	this->inclDate   = true;
 }
 
 def(void, Destroy) {
 	String_Destroy(&this->providerId);
+}
+
+def(void, SetInclDate, bool value) {
+	this->inclDate = value;
 }
 
 /* Try to auto-detect the extension. Fall back to MP3. */
@@ -40,26 +45,35 @@ static String ref(Sanitize)(String name) {
 	return out;
 }
 
-static def(String, BuildPath, Podcast podcast, String ext) {
+static String ref(GetDate)(Podcast podcast) {
 	String year  = Number_Format(podcast.date.year,  4);
 	String month = Number_Format(podcast.date.month, 2);
 	String day   = Number_Format(podcast.date.day,   2);
 
-	String title = ref(Sanitize)(podcast.title);
+	String res = String_Format($("%-%-% "), year, month, day);
 
-	String tmp;
-
-	String res = String_Format($("%/%-%-% %.%"),
-		tmp = Storage_BuildPath(this->storage, this->providerId),
-		year, month, day,
-		title,
-		ext);
-
-	String_Destroy(&tmp);
-	String_Destroy(&title);
 	String_Destroy(&day);
 	String_Destroy(&month);
 	String_Destroy(&year);
+
+	return res;
+}
+
+static def(String, BuildPath, Podcast podcast, String ext) {
+	String title = ref(Sanitize)(podcast.title);
+	String date  = $("");
+	String path  = Storage_BuildPath(this->storage, this->providerId);
+
+	if (this->inclDate) {
+		date = ref(GetDate)(podcast);
+	}
+
+	String res = String_Format($("%/%%.%"),
+		path, date, title, ext);
+
+	String_Destroy(&path);
+	String_Destroy(&date);
+	String_Destroy(&title);
 
 	return res;
 }

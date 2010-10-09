@@ -56,6 +56,9 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 					if (String_Equals(key, $("limit"))) {
 						Provider_SetLimit(provider,
 							Integer_ParseString(value));
+					} else if (String_Equals(key, $("date"))) {
+						Provider_SetInclDate(provider,
+							String_Equals(value, $("yes")));
 					} else {
 						Provider_AddSource(provider,
 							YAML_Item(_child)->value);

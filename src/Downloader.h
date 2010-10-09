@@ -20,9 +20,11 @@ typedef struct {
 	Storage *storage;
 	Logger  *logger;
 	String  providerId;
+	bool    inclDate;
 } Downloader;
 
 def(void, Init, Storage *storage, Logger *logger, String providerId);
 def(void, Destroy);
+def(void, SetInclDate, bool value);
 def(void, Get, Podcast podcast, String url);
 def(void, SaveText, Podcast podcast, String text);

@@ -121,6 +121,12 @@
 		}
 	}
 
+	.section[Date duplication in file name] {
+		The titles may already contain the date. If this is the
+		case, the downloaded file name will contain the date twice.
+		This can be prevented by using the option .keyword{date: no}.
+	}
+
 	.section[Synchronize] {
 		To synchronize, just run:
 

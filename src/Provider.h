@@ -35,6 +35,7 @@ typedef struct {
 	String name;
 
 	ssize_t limit;
+	bool    inclDate;
 } self;
 
 def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String providerId);
@@ -42,5 +43,6 @@ def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);
 def(void, SetLimit, ssize_t limit);
+def(void, SetInclDate, bool value);
 def(void, AddSource, String source);
 def(void, Retrieve);
