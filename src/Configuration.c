@@ -50,8 +50,16 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 				YAML_Node *_child = child->nodes[0]->nodes[j];
 
 				if (_child->type == YAML_NodeType_Item) {
-					Provider_AddSource(provider,
-						YAML_Item(_child)->value);
+					String key   = YAML_Item(_child)->key;
+					String value = YAML_Item(_child)->value;
+
+					if (String_Equals(key, $("limit"))) {
+						Provider_SetLimit(provider,
+							Integer_ParseString(value));
+					} else {
+						Provider_AddSource(provider,
+							YAML_Item(_child)->value);
+					}
 				}
 			}
 		}

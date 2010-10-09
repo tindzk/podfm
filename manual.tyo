@@ -105,6 +105,22 @@
 		}
 	}
 
+	.section[Limiting downloads] {
+		Some news podcasts have a repertoire which goes back for
+		several weeks. If you only want to hear the latest episode
+		or e.g. the last five episodes, you can put the option
+		.keyword{limit: n} into the podcast group. This will
+		download the first .number{n} episodes and skip the rest.
+		The default value is .number{-1} which means there's no
+		limit.
+
+		.code {
+			rss: tagesschau
+				limit: 5
+				url: http://www.tagesschau.de/export/podcast/tagesthemen/
+		}
+	}
+
 	.section[Synchronize] {
 		To synchronize, just run:
 

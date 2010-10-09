@@ -5,6 +5,7 @@ def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String
 	this->storage         = storage;
 	this->backend.methods = itf;
 	this->name            = String_Clone(providerId);
+	this->limit           = -1;
 
 	Array_Init(this->sources, 10);
 
@@ -31,6 +32,10 @@ def(void, SetName, String name) {
 	String_Copy(&this->name, name);
 }
 
+def(void, SetLimit, ssize_t limit) {
+	this->limit = limit;
+}
+
 def(void, AddSource, String source) {
 	Array_Push(this->sources, String_Clone(source));
 }
@@ -55,10 +60,17 @@ def(void, Retrieve) {
 			source, listing);
 
 		Logger_LogFmt(this->logger, Logger_Level_Info,
-			$("% items found."),
-			Integer_ToString(listing->len));
+			$("% items found (limit=%)."),
+			Integer_ToString(listing->len),
+			(this->limit == -1)
+				? $("no")
+				: Integer_ToString(this->limit));
 
 		for (size_t j = 0; j < listing->len; j++) {
+			if (this->limit >= 0 && j >= (size_t) this->limit) {
+				goto next;
+			}
+
 			if (listing->buf[j].id.len == 0) {
 				Logger_LogFmt(this->logger, Logger_Level_Error,
 					$("[%/%] The ID is empty!"),

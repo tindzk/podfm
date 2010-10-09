@@ -33,11 +33,14 @@ typedef struct {
 	} backend;
 
 	String name;
+
+	ssize_t limit;
 } self;
 
 def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String providerId);
 def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);
+def(void, SetLimit, ssize_t limit);
 def(void, AddSource, String source);
 def(void, Retrieve);
