@@ -23,12 +23,19 @@ static String ref(GetMediaExtension)(String path) {
 	}
 }
 
-static String ref(Sanitze)(String name) {
+static String ref(Sanitize)(String name) {
 	String out = String_Clone(name);
 
+	String_ReplaceAll(&out, $("?"),  $(" "));
 	String_ReplaceAll(&out, $(":"),  $(" "));
 	String_ReplaceAll(&out, $("/"),  $("-"));
 	String_ReplaceAll(&out, $("  "), $(" "));
+
+	String_Trim(&out);
+
+	if (out.len > 0 && out.buf[out.len - 1] == '.') {
+		out.len--;
+	}
 
 	return out;
 }
@@ -38,7 +45,7 @@ static def(String, BuildPath, Podcast podcast, String ext) {
 	String month = Number_Format(podcast.date.month, 2);
 	String day   = Number_Format(podcast.date.day,   2);
 
-	String title = ref(Sanitze)(podcast.title);
+	String title = ref(Sanitize)(podcast.title);
 
 	String tmp;
 
