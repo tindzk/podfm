@@ -21,6 +21,7 @@ typedef struct {
 	Logger  *logger;
 	String  providerId;
 	bool    inclDate;
+	String  location;
 } Downloader;
 
 def(void, Init, Storage *storage, Logger *logger, String providerId);

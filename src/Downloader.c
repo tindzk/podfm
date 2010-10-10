@@ -7,10 +7,12 @@ def(void, Init, Storage *storage, Logger *logger, String providerId) {
 	this->logger     = logger;
 	this->providerId = String_Clone(providerId);
 	this->inclDate   = true;
+	this->location   = HeapString(0);
 }
 
 def(void, Destroy) {
 	String_Destroy(&this->providerId);
+	String_Destroy(&this->location);
 }
 
 def(void, SetInclDate, bool value) {
@@ -78,27 +80,64 @@ static def(String, BuildPath, Podcast podcast, String ext) {
 	return res;
 }
 
+static def(void, OnHeader, String name, String value) {
+	if (String_Equals(name, $("Location"))) {
+		String_Copy(&this->location, value);
+	}
+}
+
 def(void, Get, Podcast podcast, String url) {
+	this->location.len = 0;
+
 	HTTP_Client client;
 
 	URL_Parts parts = URL_Parse(url);
 
-	HTTP_Client_Init(&client,    parts.host);
+	HTTP_Client_Init(&client, parts.host);
+
+	HTTP_Client_Events events;
+	events.onVersion = NULL;
+	events.onHeader  = (void *) &ref(OnHeader);
+	events.context   = this;
+
+	HTTP_Client_SetEvents(&client, events);
+
 	HTTP_Client_Request(&client, parts.path);
+
+	Logger_LogFmt(this->logger, Logger_Level_Debug,
+		$("URL: %"), url);
+
+	URL_Parts_Destroy(&parts);
+
+	HTTP_Client_FetchResponse(&client);
+
+	size_t cnt = 0;
+
+	if (this->location.len > 0) {
+		if (cnt > 3) {
+			Logger_Log(this->logger, Logger_Level_Error,
+				$("Redirection loop."));
+
+			goto out;
+		}
+
+		cnt++;
+
+		Logger_LogFmt(this->logger, Logger_Level_Debug,
+			$("Redirecting..."),
+			this->location);
+
+		ref(Get)(this, podcast, this->location);
+
+		goto out;
+	}
 
 	String full = ref(BuildPath)(this,
 		podcast,
 		ref(GetMediaExtension)(parts.path));
 
 	Logger_LogFmt(this->logger, Logger_Level_Debug,
-		$("URL: %"), url);
-
-	Logger_LogFmt(this->logger, Logger_Level_Debug,
 		$("Destination: %"), full);
-
-	URL_Parts_Destroy(&parts);
-
-	HTTP_Client_FetchResponse(&client);
 
 	File file;
 	File_Open(&file, full,
@@ -148,10 +187,11 @@ def(void, Get, Podcast podcast, String url) {
 
 	String_Destroy(&buf);
 
-	HTTP_Client_Destroy(&client);
-
 	BufferedStream_Close(&output);
 	BufferedStream_Destroy(&output);
+
+out:
+	HTTP_Client_Destroy(&client);
 }
 
 def(void, SaveText, Podcast podcast, String text) {
