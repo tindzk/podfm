@@ -1,8 +1,9 @@
 #import "Downloader.h"
+#import <App.h>
 
 extern Terminal term;
 
-def(void, Init, Storage *storage, Logger *logger, String providerId) {
+def(void, Init, StorageClass storage, Logger *logger, String providerId) {
 	this->storage    = storage;
 	this->logger     = logger;
 	this->providerId = String_Clone(providerId);
@@ -97,7 +98,7 @@ def(void, Get, Podcast podcast, String url) {
 
 	HTTP_Client_Events events;
 	events.onVersion = NULL;
-	events.onHeader  = (void *) &ref(OnHeader);
+	events.onHeader  = (void *) ref(OnHeader);
 	events.context   = this;
 
 	HTTP_Client_SetEvents(&client, events);
@@ -127,13 +128,12 @@ def(void, Get, Podcast podcast, String url) {
 			$("Redirecting..."),
 			this->location);
 
-		ref(Get)(this, podcast, this->location);
+		call(Get, podcast, this->location);
 
 		goto out;
 	}
 
-	String full = ref(BuildPath)(this,
-		podcast,
+	String full = call(BuildPath, podcast,
 		ref(GetMediaExtension)(parts.path));
 
 	Logger_LogFmt(this->logger, Logger_Level_Debug,
@@ -197,7 +197,7 @@ out:
 def(void, SaveText, Podcast podcast, String text) {
 	File file;
 
-	String path = ref(BuildPath)(this, podcast, $("txt"));
+	String path = call(BuildPath, podcast, $("txt"));
 
 	File_Open(&file, path,
 			FileStatus_Create   |

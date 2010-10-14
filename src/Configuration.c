@@ -1,15 +1,17 @@
 #import "Configuration.h"
 
-def(void, Init, Application *app, Logger *logger) {
+#import <App.h>
+
+def(void, Init, ApplicationClass app, Logger *logger) {
 	this->app    = app;
 	this->logger = logger;
 }
 
-static def(Provider *, NewProvider, String name) {
-	Provider *provider = Application_AddProvider(this->app,
+static def(ProviderClass, NewProvider, String name) {
+	ProviderClass provider = Application_AddProvider(this->app,
 		name);
 
-	if (provider == NULL) {
+	if (Provider_IsNull(provider)) {
 		Logger_LogFmt(this->logger, Logger_Level_Error,
 			$("Plugin '%' not found!"),
 			name);
@@ -20,8 +22,8 @@ static def(Provider *, NewProvider, String name) {
 
 static def(void, ParseSubscriptions, YAML_Node *node) {
 	for (size_t i = 0; i < node->len; i++) {
-		YAML_Node *child    = node->nodes[i];
-		Provider  *provider = NULL;
+		YAML_Node *child = node->nodes[i];
+		ProviderClass provider = Provider_Null();
 
 		if (child->type == YAML_NodeType_Item) {
 			Logger_LogFmt(this->logger, Logger_Level_Debug,
@@ -29,10 +31,9 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 				YAML_Item(child)->value,
 				YAML_Item(child)->key);
 
-			provider = ref(NewProvider)(this,
-				YAML_Item(child)->key);
+			provider = call(NewProvider, YAML_Item(child)->key);
 
-			if (provider != NULL) {
+			if (!Provider_IsNull(provider)) {
 				Provider_SetName(provider,
 					YAML_Item(child)->value);
 			}
@@ -41,11 +42,10 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 				$("Adding provider '%'..."),
 				YAML_Section(child)->name);
 
-			provider = ref(NewProvider)(this,
-				YAML_Section(child)->name);
+			provider = call(NewProvider, YAML_Section(child)->name);
 		}
 
-		if (provider != NULL && child->len > 0) {
+		if (!Provider_IsNull(provider) && child->len > 0) {
 			for (size_t j = 0; j < child->nodes[0]->len; j++) {
 				YAML_Node *_child = child->nodes[0]->nodes[j];
 
@@ -74,7 +74,7 @@ def(void, Parse) {
 	File file;
 	BufferedStream stream;
 
-	Storage *storage = Application_GetStorage(this->app);
+	StorageClass storage = Application_GetStorage(this->app);
 
 	String path = Storage_GetCfgPath(storage);
 
@@ -98,7 +98,7 @@ def(void, Parse) {
 	YAML_Init(&yml, 4, &BufferedStream_Methods, &stream);
 	YAML_Parse(&yml);
 
-	ref(ParseSubscriptions)(this, YAML_GetRoot(&yml));
+	call(ParseSubscriptions, YAML_GetRoot(&yml));
 
 	YAML_Destroy(&yml);
 

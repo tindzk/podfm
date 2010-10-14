@@ -8,7 +8,7 @@ typedef struct {
 	Date date;
 
 	void *data;
-} Podcast;
+} Class(Podcast);
 
 typedef Array(Podcast, Listing);
 

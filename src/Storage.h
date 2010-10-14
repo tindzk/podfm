@@ -8,7 +8,7 @@
 
 typedef struct {
 	String base;
-} self;
+} Class(self);
 
 def(void, Init, String base);
 def(void, Destroy);

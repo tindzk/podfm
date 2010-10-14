@@ -11,9 +11,9 @@
 #define self Configuration
 
 typedef struct {
-	Logger      *logger;
-	Application *app;
-} self;
+	Logger *logger;
+	ApplicationClass app;
+} Class(self);
 
-def(void, Init, Application *app, Logger *logger);
+def(void, Init, ApplicationClass app, Logger *logger);
 def(void, Parse);

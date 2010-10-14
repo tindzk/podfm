@@ -17,11 +17,11 @@ enum {
 typedef struct {
 	File file;
 	StringArray *items;
-} self;
+} Class(self);
 
 void Cache0(ExceptionManager *e);
 
-def(void, Init, Storage *storage, Logger *logger, String provider);
+def(void, Init, StorageClass storage, Logger *logger, String provider);
 def(void, Destroy);
 def(bool, Has, String id);
 def(void, Add, String id);

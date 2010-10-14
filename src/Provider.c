@@ -1,23 +1,24 @@
 #import "Provider.h"
 
-def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String providerId) {
+#import <App.h>
+
+def(void, Init, Logger *logger, StorageClass storage, ProviderInterface *itf, String providerId) {
 	this->logger          = logger;
 	this->storage         = storage;
-	this->backend.methods = itf;
 	this->name            = String_Clone(providerId);
 	this->limit           = -1;
 	this->inclDate        = true;
 
 	Array_Init(this->sources, 10);
 
-	this->backend.context = Memory_Alloc(itf->size);
-	itf->init(this->backend.context, this->logger);
+	this->methods = itf;
+	this->context = Generic_New(itf->size);
+	this->methods->init(this->context, this->logger);
 }
 
 def(void, Destroy) {
-	this->backend.methods->destroy(this->backend.context);
-
-	Memory_Free(this->backend.context);
+	this->methods->destroy(this->context);
+	Generic_Free(this->context);
 
 	String_Destroy(&this->name);
 
@@ -46,12 +47,17 @@ def(void, AddSource, String source) {
 }
 
 def(void, Retrieve) {
-	Downloader dl;
-	Downloader_Init(&dl, this->storage, this->logger, this->name);
-	Downloader_SetInclDate(&dl, this->inclDate);
+	struct {
+		Cache      cache;
+		Downloader dl;
+	} private;
 
-	Cache cache;
-	Cache_Init(&cache, this->storage, this->logger, this->name);
+	DownloaderClass dl = Downloader_AsClass(&private.dl);
+	Downloader_Init(dl, this->storage, this->logger, this->name);
+	Downloader_SetInclDate(dl, this->inclDate);
+
+	CacheClass cache = Cache_AsClass(&private.cache);
+	Cache_Init(cache, this->storage, this->logger, this->name);
 
 	for (size_t i = 0; i < this->sources->len; i++) {
 		String source = this->sources->buf[i];
@@ -62,8 +68,7 @@ def(void, Retrieve) {
 		Listing *listing;
 		Array_Init(listing, 128);
 
-		this->backend.methods->getListing(this->backend.context,
-			source, listing);
+		this->methods->getListing(this->context, source, listing);
 
 		Logger_LogFmt(this->logger, Logger_Level_Info,
 			$("% items found (limit=%)."),
@@ -93,29 +98,29 @@ def(void, Retrieve) {
 				listing->buf[j].title,
 				listing->buf[j].id);
 
-			if (Cache_Has(&cache, listing->buf[j].id)) {
+			if (Cache_Has(cache, listing->buf[j].id)) {
 				Logger_Log(this->logger, Logger_Level_Info,
 					$("Already in cache. Skipping..."));
 
 				goto next;
 			}
 
-			this->backend.methods->fetch(this->backend.context,
-				&dl, listing->buf[j]);
+			this->methods->fetch(this->context, dl,
+				listing->buf[j]);
 
-			Cache_Add(&cache, listing->buf[j].id);
+			Cache_Add(cache, listing->buf[j].id);
 
 		next:
 			String_Destroy(&listing->buf[j].id);
 			String_Destroy(&listing->buf[j].title);
-			this->backend.methods->destroyItem(listing->buf[j].data);
+			this->methods->destroyItem(listing->buf[j].data);
 			Memory_Free(listing->buf[j].data);
 		}
 
 		Array_Destroy(listing);
 	}
 
-	Downloader_Destroy(&dl);
+	Downloader_Destroy(dl);
 
-	Cache_Destroy(&cache);
+	Cache_Destroy(cache);
 }

@@ -12,8 +12,4 @@
 #undef self
 #define self Providers_RSS
 
-typedef struct {
-	Logger *logger;
-} self;
-
 ProviderInfo ref(Info);

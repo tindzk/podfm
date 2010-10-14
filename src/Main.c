@@ -58,18 +58,24 @@ int main(int argc, char *argv[]) {
 		? String_FromNul(argv[1])
 		: $(DefaultPath);
 
-	Storage storage;
-	Storage_Init(&storage, path);
+	struct {
+		Storage       storage;
+		Application   app;
+		Configuration cfg;
+	} private;
 
-	Application app;
-	Application_Init(&app, &logger, &storage);
+	StorageClass storage = Storage_AsClass(&private.storage);
+	Storage_Init(storage, path);
+
+	ApplicationClass app = Application_AsClass(&private.app);
+	Application_Init(app, &logger, storage);
 
 	try (&exc) {
-		Configuration cfg;
-		Configuration_Init(&cfg, &app, &logger);
-		Configuration_Parse(&cfg);
+		ConfigurationClass cfg = Configuration_AsClass(&private.cfg);
+		Configuration_Init(cfg, app, &logger);
+		Configuration_Parse(cfg);
 
-		Application_Retrieve(&app);
+		Application_Retrieve(app);
 	} catchAny(e) {
 		Exception_Print(e);
 
@@ -79,8 +85,8 @@ int main(int argc, char *argv[]) {
 
 		res = EXIT_FAILURE;
 	} finally {
-		Application_Destroy(&app);
-		Storage_Destroy(&storage);
+		Application_Destroy(app);
+		Storage_Destroy(storage);
 
 		Terminal_Destroy(&term);
 	} tryEnd;

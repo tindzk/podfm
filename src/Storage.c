@@ -1,4 +1,5 @@
 #import "Storage.h"
+#import <App.h>
 
 def(void, Init, String base) {
 	this->base = String_Clone(base);
@@ -9,7 +10,7 @@ def(void, Destroy) {
 }
 
 def(String, GetBase) {
-	return this->base;
+	return String_Disown(this->base);
 }
 
 def(String, BuildPath, String provider) {

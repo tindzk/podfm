@@ -1,5 +1,7 @@
 #import "Cache.h"
 
+#import <App.h>
+
 size_t Modules_Cache;
 
 static ExceptionManager *exc;
@@ -10,7 +12,7 @@ void Cache0(ExceptionManager *e) {
 	exc = e;
 }
 
-def(void, Init, Storage *storage, Logger *logger, String provider) {
+def(void, Init, StorageClass storage, Logger *logger, String provider) {
 	String path = Storage_GetCachePath(storage, provider);
 
 	File_Open(&this->file, path,

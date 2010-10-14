@@ -1,4 +1,9 @@
 #import "RSS.h"
+#import <App.h>
+
+typedef struct {
+	Logger *logger;
+} Class(self);
 
 extern ExceptionManager exc;
 
@@ -79,7 +84,7 @@ def(void, GetListing, String url, Listing *res) {
 	String_Destroy(&buf);
 }
 
-def(void, Fetch, Downloader *dl, Podcast item) {
+def(void, Fetch, DownloaderClass dl, Podcast item) {
 	TranscribedPodcastItem *data = item.data;
 
 	Downloader_Get(dl, item, data->podcast);
@@ -89,10 +94,10 @@ ProviderInfo ref(Info) = {
 	.id      = $("rss"),
 	.methods = {
 		.size        = sizeof(self),
-		.init        = (void *) &ref(Init),
-		.destroy     = (void *) &ref(Destroy),
-		.destroyItem = (void *) &ref(DestroyItem),
-		.getListing  = (void *) &ref(GetListing),
-		.fetch       = (void *) &ref(Fetch)
+		.init        = (void *) ref(Init),
+		.destroy     = (void *) ref(Destroy),
+		.destroyItem = (void *) ref(DestroyItem),
+		.getListing  = (void *) ref(GetListing),
+		.fetch       = (void *) ref(Fetch)
 	}
 };

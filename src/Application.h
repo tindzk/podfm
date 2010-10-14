@@ -11,19 +11,19 @@
 #define self Application
 
 typedef struct {
-	ProviderInfo *item;
-	Provider     *provider;
+	ProviderInfo  *item;
+	ProviderClass provider;
 } ProviderInstance;
 
 typedef struct {
-	Logger  *logger;
-	Storage *storage;
+	Logger *logger;
+	StorageClass storage;
 
 	Array(ProviderInstance, *providers);
-} self;
+} Class(self);
 
-def(void, Init, Logger *logger, Storage *storage);
+def(void, Init, Logger *logger, StorageClass storage);
 def(void, Destroy);
-def(Storage *, GetStorage);
-def(Provider *, AddProvider, String id);
+def(StorageClass, GetStorage);
+def(ProviderClass, AddProvider, String id);
 def(void, Retrieve);

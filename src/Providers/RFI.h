@@ -12,9 +12,4 @@
 #undef self
 #define self Providers_RFI
 
-typedef struct {
-	Logger *logger;
-	HTTP_Client client;
-} self;
-
 ProviderInfo ref(Info);

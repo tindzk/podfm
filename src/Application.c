@@ -1,4 +1,5 @@
 #import "Application.h"
+#import <App.h>
 
 static ProviderInfo* providers[] = {
 	/* French */
@@ -8,7 +9,7 @@ static ProviderInfo* providers[] = {
 	&Providers_RSS_Info
 };
 
-def(void, Init, Logger *logger, Storage *storage) {
+def(void, Init, Logger *logger, StorageClass storage) {
 	this->logger  = logger;
 	this->storage = storage;
 
@@ -18,20 +19,20 @@ def(void, Init, Logger *logger, Storage *storage) {
 def(void, Destroy) {
 	Array_Foreach(this->providers, ^(ProviderInstance *instance) {
 		Provider_Destroy(instance->provider);
-		Memory_Free(instance->provider);
+		Provider_Free(instance->provider);
 	});
 
 	Array_Destroy(this->providers);
 }
 
-def(Storage *, GetStorage) {
+def(StorageClass, GetStorage) {
 	return this->storage;
 }
 
-def(Provider *, AddProvider, String id) {
+def(ProviderClass, AddProvider, String id) {
 	size_t i;
 
-	for (i = 0; i < sizeof(providers) / sizeof(providers[0]); i++) {
+	for (i = 0; i < nElems(providers); i++) {
 		if (String_Equals(providers[i]->id, id)) {
 			goto found;
 		}
@@ -41,7 +42,7 @@ def(Provider *, AddProvider, String id) {
 		ProviderInstance instance;
 
 		instance.item     = providers[i];
-		instance.provider = New(Provider);
+		instance.provider = Provider_New();
 
 		Provider_Init(instance.provider,
 			this->logger,
@@ -54,17 +55,17 @@ def(Provider *, AddProvider, String id) {
 		return instance.provider;
 	}
 
-	return NULL;
+	return Provider_Null();
 }
 
 def(void, Retrieve) {
 	for (size_t i = 0; i < this->providers->len; i++) {
-		ProviderInstance instance = this->providers->buf[i];
+		ProviderClass members = this->providers->buf[i].provider;
 
 		Logger_LogFmt(this->logger, Logger_Level_Info,
 			$("Processing provider '%'..."),
-			Provider_GetName(instance.provider));
+			Provider_GetName(members));
 
-		Provider_Retrieve(instance.provider);
+		Provider_Retrieve(members);
 	}
 }

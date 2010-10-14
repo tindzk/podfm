@@ -7,11 +7,12 @@
 
 typedef struct {
 	size_t size;
-	void (*init)(void *this, Logger *logger);
-	void (*destroy)(void *this);
+
+	void (*init)       (GenericClass this, Logger *logger);
+	void (*destroy)    (GenericClass this);
 	void (*destroyItem)(void *item);
-	void (*getListing)(void *this, String name, Listing *res);
-	void (*fetch)(void *this, Downloader *dl, Podcast item);
+	void (*getListing) (GenericClass this, String name, Listing *res);
+	void (*fetch)      (GenericClass this, DownloaderClass dl, Podcast item);
 } ProviderInterface;
 
 typedef struct {
@@ -23,22 +24,18 @@ typedef struct {
 #define self Provider
 
 typedef struct {
-	Logger      *logger;
-	Storage     *storage;
-	StringArray *sources;
-
-	struct {
-		ProviderInterface *methods;
-		void *context;
-	} backend;
-
-	String name;
-
+	String  name;
 	ssize_t limit;
 	bool    inclDate;
-} self;
 
-def(void, Init, Logger *logger, Storage *storage, ProviderInterface *itf, String providerId);
+	Logger            *logger;
+	StringArray       *sources;
+	ProviderInterface *methods;
+	GenericClass       context;
+	StorageClass       storage;
+} Class(self);
+
+def(void, Init, Logger *logger, StorageClass storage, ProviderInterface *itf, String providerId);
 def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);
