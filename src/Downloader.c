@@ -204,13 +204,12 @@ def(void, SaveText, Podcast podcast, String text) {
 			FileStatus_Truncate |
 			FileStatus_WriteOnly);
 
+	String_Destroy(&path);
+
 	File_Write(&file, text);
 
 	File_Close(&file);
 
-	Logger_LogFmt(this->logger, Logger_Level_Info,
-		$("Saved transcript."),
-		path, Integer_ToString(text.len));
-
-	String_Destroy(&path);
+	Logger_Log(this->logger, Logger_Level_Info,
+		$("Saved transcript."));
 }
