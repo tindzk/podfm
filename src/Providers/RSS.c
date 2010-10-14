@@ -85,7 +85,7 @@ def(void, GetListing, String url, Listing *res) {
 }
 
 def(void, Fetch, DownloaderClass dl, Podcast item) {
-	TranscribedPodcastItem *data = item.data;
+	DefaultPodcastItem *data = item.data;
 
 	Downloader_Get(dl, item, data->podcast);
 }
