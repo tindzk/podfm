@@ -74,23 +74,19 @@ def(void, Parse) {
 	File file;
 	BufferedStream stream;
 
-	StorageClass storage = Application_GetStorage(this->app);
-
-	String path = Storage_GetCfgPath(storage);
+	String path =
+		Storage_GetCfgPath(
+			Application_GetStorage(this->app));
 
 	if (!Path_Exists(path)) {
 		Logger_LogFmt(this->logger, Logger_Level_Fatal,
 			$("The subscriptions file % does not exist!"),
 			path);
 
-		String_Destroy(&path);
-
-		return;
+		goto out;
 	}
 
 	FileStream_Open(&file, path, FileStatus_ReadOnly);
-
-	String_Destroy(&path);
 
 	BufferedStream_Init(&stream, &FileStream_Methods, &file);
 	BufferedStream_SetInputBuffer(&stream, 1024, 128);
@@ -104,4 +100,7 @@ def(void, Parse) {
 
 	BufferedStream_Close(&stream);
 	BufferedStream_Destroy(&stream);
+
+out:
+	String_Destroy(&path);
 }
