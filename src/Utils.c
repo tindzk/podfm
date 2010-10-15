@@ -2,34 +2,22 @@
 
 extern Terminal term;
 
-void Utils_OnLogMessage(__unused Logger *this, String msg,
-	Logger_Level level, __unused String file, __unused int line)
-{
+void Utils_OnLogMessage(__unused Logger *this, String msg, Logger_Level level, String file, int line) {
+	String color  = String("black");
 	String slevel = Logger_LevelToString(level);
+	String sline = Integer_ToString(line);
 
-	String fmt = String_Format($("[%] %\n"), slevel, msg);
-
-	if (level == Logger_Level_Error || level == Logger_Level_Fatal) {
-		Terminal_Print(&term,
-			Terminal_Color_ForegroundRed,
-			Terminal_Font_Normal,
-			fmt);
-	} else if (level == Logger_Level_Info) {
-		Terminal_Print(&term,
-			Terminal_Color_ForegroundCyan,
-			Terminal_Font_Normal,
-			fmt);
-	} else if (level == Logger_Level_Debug) {
-		Terminal_Print(&term,
-			Terminal_Color_ForegroundYellow,
-			Terminal_Font_Normal,
-			fmt);
-	} else {
-		Terminal_Print(&term,
-			Terminal_Color_Normal,
-			Terminal_Font_Normal,
-			fmt);
+	if (level == Logger_Level_Fatal || level == Logger_Level_Crit || level == Logger_Level_Error) {
+		color = String("red");
+	} else if (level == Logger_Level_Warn || level == Logger_Level_Info) {
+		color = String("yellow");
+	} else if (level == Logger_Level_Debug || level == Logger_Level_Trace) {
+		color = String("cyan");
 	}
 
-	String_Destroy(&fmt);
+	Terminal_Controller controller;
+	Terminal_Controller_Init(&controller, &term);
+	Terminal_Controller_Render(&controller,
+		$(".fg[%]{.b{[%]} % .i{(%:%)}}\n"),
+		color, slevel, msg, file, sline);
 }
