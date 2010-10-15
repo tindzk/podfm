@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 		Logger_Level_Debug |
 		Logger_Level_Trace);
 
-	int res = EXIT_SUCCESS;
+	int res = ExitStatus_Success;
 
 	Terminal_Init(&term, File_StdIn, File_StdOut, true);
 	Terminal_Configure(&term, false, true);
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 		Backtrace_PrintTrace(e->trace, e->traceItems);
 #endif
 
-		res = EXIT_FAILURE;
+		res = ExitStatus_Failure;
 	} finally {
 		Application_Destroy(app);
 		Storage_Destroy(storage);
