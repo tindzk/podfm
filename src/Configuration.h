@@ -11,10 +11,10 @@
 #undef self
 #define self Configuration
 
-record {
+Class(self) {
 	Logger *logger;
 	ApplicationInstance app;
-} Class(self);
+};
 
 def(void, Init, ApplicationInstance app);
 def(void, Parse);

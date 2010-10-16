@@ -11,9 +11,9 @@
 #undef self
 #define self Providers_RFI
 
-record {
+Class(self) {
 	HTTP_Client client;
-} Class(self);
+};
 
 extern ExceptionManager exc;
 

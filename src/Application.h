@@ -10,12 +10,12 @@
 #undef self
 #define self Application
 
-record {
+Class(self) {
 	Logger *logger;
 	StorageInstance storage;
 
 	Array(ProviderFacadeInstance, *providers);
-} Class(self);
+};
 
 def(void, Init, StorageInstance storage);
 def(void, Destroy);

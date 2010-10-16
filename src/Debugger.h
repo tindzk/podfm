@@ -6,9 +6,9 @@
 #undef self
 #define self Debugger
 
-record {
+Class(self) {
 	Logger logger;
-} Class(Debugger);
+};
 
 def(Logger *, GetLogger);
 DebuggerInstance ref(GetInstance)(void);

@@ -2,13 +2,13 @@
 #import <Array.h>
 #import <String.h>
 
-record {
+Class(Podcast) {
 	String id;
 	String title;
 	Date date;
 
 	void *data;
-} Class(Podcast);
+};
 
 typedef Array(Podcast, Listing);
 

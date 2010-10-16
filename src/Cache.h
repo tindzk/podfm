@@ -14,10 +14,10 @@ enum {
 	excIndexFileTooLarge = excOffset
 };
 
-record {
+Class(self) {
 	File file;
 	StringArray *items;
-} Class(self);
+};
 
 void Cache0(ExceptionManager *e);
 

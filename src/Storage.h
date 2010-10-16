@@ -4,9 +4,9 @@
 #undef self
 #define self Storage
 
-record {
+Class(self) {
 	String base;
-} Class(self);
+};
 
 def(void, Init, String base);
 def(void, Destroy);

@@ -16,13 +16,13 @@
 #undef self
 #define self Downloader
 
-record {
+Class(self) {
 	StorageInstance storage;
 	Logger  *logger;
 	String  providerId;
 	bool    inclDate;
 	String  location;
-} Class(Downloader);
+};
 
 def(void, Init, StorageInstance storage, String providerId);
 def(void, Destroy);

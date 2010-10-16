@@ -10,7 +10,7 @@
 #undef self
 #define self ProviderFacade
 
-record {
+Class(self) {
 	String  name;
 	ssize_t limit;
 	bool    inclDate;
@@ -20,7 +20,9 @@ record {
 	ProviderInterface *methods;
 	GenericInstance   context;
 	StorageInstance   storage;
-} Class(self);
+};
+
+ExtendClass(self);
 
 def(void, Init, StorageInstance storage, ProviderInterface *itf);
 def(void, Destroy);

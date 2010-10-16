@@ -11,9 +11,9 @@
 #undef self
 #define self Providers_RSS
 
-record {
+Class(self) {
 
-} Class(self);
+};
 
 extern ExceptionManager exc;
 
