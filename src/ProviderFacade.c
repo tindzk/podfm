@@ -11,13 +11,26 @@ def(void, Init, StorageInstance storage, ProviderInterface *itf) {
 	Array_Init(this->sources, 10);
 
 	this->methods = itf;
-	this->context = Generic_New(itf->size);
-	this->methods->init(this->context);
+
+	if (itf->size > 0) {
+		this->context = Generic_New(itf->size);
+	} else {
+		this->context = Generic_Null();
+	}
+
+	if (this->methods->init != NULL) {
+		this->methods->init(this->context);
+	}
 }
 
 def(void, Destroy) {
-	this->methods->destroy(this->context);
-	Generic_Free(this->context);
+	if (this->methods->destroy != NULL) {
+		this->methods->destroy(this->context);
+	}
+
+	if (!Generic_IsNull(this->context)) {
+		Generic_Free(this->context);
+	}
 
 	String_Destroy(&this->name);
 

@@ -2,18 +2,10 @@
 #import <App.h>
 
 typedef struct {
-	void *p;
+
 } Class(self);
 
 extern ExceptionManager exc;
-
-def(void, Init) {
-
-}
-
-def(void, Destroy) {
-
-}
 
 void ref(DestroyItem)(DefaultPodcastItem *item) {
 	String_Destroy(&item->podcast);
@@ -94,8 +86,8 @@ def(void, Fetch, DownloaderInstance dl, Podcast item) {
 ProviderInterface ref(ProviderImpl) = {
 	.id          = $("rss"),
 	.size        = sizeof(self),
-	.init        = (void *) ref(Init),
-	.destroy     = (void *) ref(Destroy),
+	.init        = NULL,
+	.destroy     = NULL,
 	.destroyItem = (void *) ref(DestroyItem),
 	.getListing  = (void *) ref(GetListing),
 	.fetch       = (void *) ref(Fetch)
