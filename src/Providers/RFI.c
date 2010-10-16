@@ -90,7 +90,7 @@ def(void, GetListing, String name, Listing *res) {
 	String_Destroy(&buf);
 }
 
-def(void, Fetch, DownloaderClass dl, Podcast item) {
+def(void, Fetch, DownloaderInstance dl, Podcast item) {
 	TranscribedPodcastItem *data = item.data;
 
 	Downloader_Get(dl, item, data->podcast);

@@ -21,7 +21,7 @@ typedef struct {
 
 void Cache0(ExceptionManager *e);
 
-def(void, Init, StorageClass storage, String provider);
+def(void, Init, StorageInstance storage, String provider);
 def(void, Destroy);
 def(bool, Has, String id);
 def(void, Add, String id);

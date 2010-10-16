@@ -5,20 +5,10 @@
 #import "Storage.h"
 #import "Debugger.h"
 #import "Downloader.h"
-
-typedef struct {
-	String id;
-	size_t size;
-
-	void (*init)       (GenericClass this);
-	void (*destroy)    (GenericClass this);
-	void (*destroyItem)(void *item);
-	void (*getListing) (GenericClass this, String name, Listing *res);
-	void (*fetch)      (GenericClass this, DownloaderClass dl, Podcast item);
-} ProviderInterface;
+#import "ProviderInterface.h"
 
 #undef self
-#define self Provider
+#define self ProviderFacade
 
 typedef struct {
 	String  name;
@@ -28,11 +18,11 @@ typedef struct {
 	Logger            *logger;
 	StringArray       *sources;
 	ProviderInterface *methods;
-	GenericClass       context;
-	StorageClass       storage;
+	GenericInstance   context;
+	StorageInstance   storage;
 } Class(self);
 
-def(void, Init, StorageClass storage, ProviderInterface *itf);
+def(void, Init, StorageInstance storage, ProviderInterface *itf);
 def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);

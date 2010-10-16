@@ -5,7 +5,7 @@
 #import <Date/RFC822.h>
 #import <HTML/Entities.h>
 
-#import "../Provider.h"
+#import "../ProviderInterface.h"
 
 #undef self
 #define self Providers_RFI

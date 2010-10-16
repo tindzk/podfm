@@ -1,8 +1,8 @@
-#import "Provider.h"
+#import "ProviderFacade.h"
 #import <App.h>
 
-def(void, Init, StorageClass storage, ProviderInterface *itf) {
-	this->logger   = Debugger_GetLogger(Debugger_GetClass());
+def(void, Init, StorageInstance storage, ProviderInterface *itf) {
+	this->logger   = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage  = storage;
 	this->name     = String_Clone(itf->id);
 	this->limit    = -1;
@@ -51,11 +51,11 @@ def(void, Retrieve) {
 		Downloader dl;
 	} private;
 
-	DownloaderClass dl = Downloader_AsClass(&private.dl);
+	DownloaderInstance dl = Downloader_FromObject(&private.dl);
 	Downloader_Init(dl, this->storage, this->name);
 	Downloader_SetInclDate(dl, this->inclDate);
 
-	CacheClass cache = Cache_AsClass(&private.cache);
+	CacheInstance cache = Cache_FromObject(&private.cache);
 	Cache_Init(cache, this->storage, this->name);
 
 	for (size_t i = 0; i < this->sources->len; i++) {

@@ -1,16 +1,16 @@
 #import "Configuration.h"
 #import <App.h>
 
-def(void, Init, ApplicationClass app) {
+def(void, Init, ApplicationInstance app) {
 	this->app    = app;
-	this->logger = Debugger_GetLogger(Debugger_GetClass());
+	this->logger = Debugger_GetLogger(Debugger_GetInstance());
 }
 
-static def(ProviderClass, NewProvider, String name) {
-	ProviderClass provider = Application_AddProvider(this->app,
-		name);
+static def(ProviderFacadeInstance, NewProvider, String name) {
+	ProviderFacadeInstance provider =
+		Application_AddProvider(this->app, name);
 
-	if (Provider_IsNull(provider)) {
+	if (ProviderFacade_IsNull(provider)) {
 		Logger_LogFmt(this->logger, Logger_Level_Error,
 			$("Plugin '%' not found!"),
 			name);
@@ -22,7 +22,7 @@ static def(ProviderClass, NewProvider, String name) {
 static def(void, ParseSubscriptions, YAML_Node *node) {
 	for (size_t i = 0; i < node->len; i++) {
 		YAML_Node *child = node->nodes[i];
-		ProviderClass provider = Provider_Null();
+		ProviderFacadeInstance provider = ProviderFacade_Null();
 
 		if (child->type == YAML_NodeType_Item) {
 			Logger_LogFmt(this->logger, Logger_Level_Debug,
@@ -32,8 +32,8 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 
 			provider = call(NewProvider, YAML_Item(child)->key);
 
-			if (!Provider_IsNull(provider)) {
-				Provider_SetName(provider,
+			if (!ProviderFacade_IsNull(provider)) {
+				ProviderFacade_SetName(provider,
 					YAML_Item(child)->value);
 			}
 		} else if (child->type == YAML_NodeType_Section) {
@@ -44,7 +44,7 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 			provider = call(NewProvider, YAML_Section(child)->name);
 		}
 
-		if (!Provider_IsNull(provider) && child->len > 0) {
+		if (!ProviderFacade_IsNull(provider) && child->len > 0) {
 			for (size_t j = 0; j < child->nodes[0]->len; j++) {
 				YAML_Node *_child = child->nodes[0]->nodes[j];
 
@@ -53,13 +53,13 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 					String value = YAML_Item(_child)->value;
 
 					if (String_Equals(key, $("limit"))) {
-						Provider_SetLimit(provider,
+						ProviderFacade_SetLimit(provider,
 							Integer_ParseString(value));
 					} else if (String_Equals(key, $("date"))) {
-						Provider_SetInclDate(provider,
+						ProviderFacade_SetInclDate(provider,
 							String_Equals(value, $("yes")));
 					} else {
-						Provider_AddSource(provider,
+						ProviderFacade_AddSource(provider,
 							YAML_Item(_child)->value);
 					}
 				}

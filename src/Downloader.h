@@ -17,14 +17,14 @@
 #define self Downloader
 
 typedef struct {
-	StorageClass storage;
+	StorageInstance storage;
 	Logger  *logger;
 	String  providerId;
 	bool    inclDate;
 	String  location;
 } Class(Downloader);
 
-def(void, Init, StorageClass storage, String providerId);
+def(void, Init, StorageInstance storage, String providerId);
 def(void, Destroy);
 def(void, SetInclDate, bool value);
 def(void, Get, Podcast podcast, String url);

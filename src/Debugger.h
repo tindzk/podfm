@@ -11,4 +11,4 @@ typedef struct {
 } Class(Debugger);
 
 def(Logger *, GetLogger);
-DebuggerClass ref(GetClass)(void);
+DebuggerInstance ref(GetInstance)(void);

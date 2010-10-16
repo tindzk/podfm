@@ -13,8 +13,8 @@
 
 typedef struct {
 	Logger *logger;
-	ApplicationClass app;
+	ApplicationInstance app;
 } Class(self);
 
-def(void, Init, ApplicationClass app);
+def(void, Init, ApplicationInstance app);
 def(void, Parse);

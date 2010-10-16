@@ -6,24 +6,20 @@
 #import "Debugger.h"
 #import "Providers/RFI.h"
 #import "Providers/RSS.h"
+#import "ProviderFacade.h"
 
 #undef self
 #define self Application
 
 typedef struct {
-	ProviderInterface *item;
-	ProviderClass provider;
-} ProviderInstance;
-
-typedef struct {
 	Logger *logger;
-	StorageClass storage;
+	StorageInstance storage;
 
-	Array(ProviderInstance, *providers);
+	Array(ProviderFacadeInstance, *providers);
 } Class(self);
 
-def(void, Init, StorageClass storage);
+def(void, Init, StorageInstance storage);
 def(void, Destroy);
-def(StorageClass, GetStorage);
-def(ProviderClass, AddProvider, String id);
+def(StorageInstance, GetStorage);
+def(ProviderFacadeInstance, AddProvider, String id);
 def(void, Retrieve);

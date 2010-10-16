@@ -52,14 +52,14 @@ int main(int argc, char *argv[]) {
 		Configuration cfg;
 	} private;
 
-	StorageClass storage = Storage_AsClass(&private.storage);
+	StorageInstance storage = Storage_FromObject(&private.storage);
 	Storage_Init(storage, path);
 
-	ApplicationClass app = Application_AsClass(&private.app);
+	ApplicationInstance app = Application_FromObject(&private.app);
 	Application_Init(app, storage);
 
 	try (&exc) {
-		ConfigurationClass cfg = Configuration_AsClass(&private.cfg);
+		ConfigurationInstance cfg = Configuration_FromObject(&private.cfg);
 		Configuration_Init(cfg, app);
 		Configuration_Parse(cfg);
 

@@ -3,8 +3,8 @@
 
 extern Terminal term;
 
-def(void, Init, StorageClass storage, String providerId) {
-	this->logger     = Debugger_GetLogger(Debugger_GetClass());
+def(void, Init, StorageInstance storage, String providerId) {
+	this->logger     = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage    = storage;
 	this->providerId = String_Clone(providerId);
 	this->inclDate   = true;

@@ -9,27 +9,27 @@ static ProviderInterface* providers[] = {
 	&Providers_RSS_ProviderImpl
 };
 
-def(void, Init, StorageClass storage) {
-	this->logger  = Debugger_GetLogger(Debugger_GetClass());
+def(void, Init, StorageInstance storage) {
+	this->logger  = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage = storage;
 
 	Array_Init(this->providers, 16);
 }
 
 def(void, Destroy) {
-	Array_Foreach(this->providers, ^(ProviderInstance *instance) {
-		Provider_Destroy(instance->provider);
-		Provider_Free(instance->provider);
+	Array_Foreach(this->providers, ^(ProviderFacadeInstance *provider) {
+		ProviderFacade_Destroy(*provider);
+		ProviderFacade_Free(*provider);
 	});
 
 	Array_Destroy(this->providers);
 }
 
-def(StorageClass, GetStorage) {
+def(StorageInstance, GetStorage) {
 	return this->storage;
 }
 
-def(ProviderClass, AddProvider, String id) {
+def(ProviderFacadeInstance, AddProvider, String id) {
 	size_t i;
 
 	for (i = 0; i < nElems(providers); i++) {
@@ -39,30 +39,26 @@ def(ProviderClass, AddProvider, String id) {
 	}
 
 	when (found) {
-		ProviderInstance instance;
+		ProviderFacadeInstance provider = ProviderFacade_New();
 
-		instance.item     = providers[i];
-		instance.provider = Provider_New();
+		ProviderFacade_Init(provider, this->storage, providers[i]);
 
-		Provider_Init(instance.provider,
-			this->storage, providers[i]);
+		Array_Push(this->providers, provider);
 
-		Array_Push(this->providers, instance);
-
-		return instance.provider;
+		return provider;
 	}
 
-	return Provider_Null();
+	return ProviderFacade_Null();
 }
 
 def(void, Retrieve) {
 	for (size_t i = 0; i < this->providers->len; i++) {
-		ProviderClass members = this->providers->buf[i].provider;
+		ProviderFacadeInstance provider = this->providers->buf[i];
 
 		Logger_LogFmt(this->logger, Logger_Level_Info,
 			$("Processing provider '%'..."),
-			Provider_GetName(members));
+			ProviderFacade_GetName(provider));
 
-		Provider_Retrieve(members);
+		ProviderFacade_Retrieve(provider);
 	}
 }

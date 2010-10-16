@@ -7,16 +7,16 @@ static def(void, Init);
 static def(void, OnLogMessage, String msg, Logger_Level level, String file, int line);
 
 /* Design pattern: Singleton */
-DebuggerClass ref(GetClass)(void) {
-	static Debugger      storage;
-	static DebuggerClass class;
+DebuggerInstance ref(GetInstance)(void) {
+	static Debugger         storage;
+	static DebuggerInstance instance;
 
-	if (Debugger_IsNull(class)) {
-		class = ref(AsClass)(&storage);
-		ref(Init)(class);
+	if (Debugger_IsNull(instance)) {
+		instance = ref(FromObject)(&storage);
+		ref(Init)(instance);
 	}
 
-	return class;
+	return instance;
 }
 
 static def(void, Init) {
