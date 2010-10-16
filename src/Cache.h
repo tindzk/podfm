@@ -14,7 +14,7 @@ enum {
 	excIndexFileTooLarge = excOffset
 };
 
-Class(self) {
+class(self) {
 	File file;
 	StringArray *items;
 };

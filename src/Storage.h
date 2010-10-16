@@ -4,7 +4,7 @@
 #undef self
 #define self Storage
 
-Class(self) {
+class(self) {
 	String base;
 };
 

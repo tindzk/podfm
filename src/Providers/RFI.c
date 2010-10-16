@@ -11,7 +11,7 @@
 #undef self
 #define self Providers_RFI
 
-Class(self) {
+class(self) {
 	HTTP_Client client;
 };
 

@@ -10,7 +10,7 @@
 #undef self
 #define self Application
 
-Class(self) {
+class(self) {
 	Logger *logger;
 	StorageInstance storage;
 

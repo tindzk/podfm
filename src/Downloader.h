@@ -16,7 +16,7 @@
 #undef self
 #define self Downloader
 
-Class(self) {
+class(self) {
 	StorageInstance storage;
 	Logger  *logger;
 	String  providerId;

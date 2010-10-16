@@ -11,7 +11,7 @@
 #undef self
 #define self Providers_RSS
 
-Class(self) {
+class(self) {
 
 };
 

@@ -11,7 +11,7 @@
 #undef self
 #define self Configuration
 
-Class(self) {
+class(self) {
 	Logger *logger;
 	ApplicationInstance app;
 };

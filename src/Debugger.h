@@ -6,7 +6,7 @@
 #undef self
 #define self Debugger
 
-Class(self) {
+class(self) {
 	Logger logger;
 };
 

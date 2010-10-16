@@ -2,7 +2,7 @@
 #import <Array.h>
 #import <String.h>
 
-Class(Podcast) {
+class(Podcast) {
 	String id;
 	String title;
 	Date date;
@@ -14,11 +14,11 @@ typedef Array(Podcast, Listing);
 
 // ---
 
-record {
+record(DefaultPodcastItem) {
 	String podcast;    /* Podcast URL */
-} DefaultPodcastItem;
+};
 
-record {
+record(TranscribedPodcastItem) {
 	String podcast;    /* Podcast URL */
 	String transcript; /* Transcript URL */
-} TranscribedPodcastItem;
+};

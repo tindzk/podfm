@@ -10,7 +10,7 @@
 #undef self
 #define self ProviderFacade
 
-Class(self) {
+class(self) {
 	String  name;
 	ssize_t limit;
 	bool    inclDate;
