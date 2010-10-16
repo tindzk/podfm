@@ -74,7 +74,7 @@ def(void, Retrieve) {
 	for (size_t i = 0; i < this->sources->len; i++) {
 		String source = this->sources->buf[i];
 
-		Logger_LogFmt(this->logger, Logger_Level_Info,
+		Logger_Info(this->logger,
 			$("Requesting listing for source '%'..."), source);
 
 		Listing *listing;
@@ -82,8 +82,7 @@ def(void, Retrieve) {
 
 		this->methods->getListing(this->context, source, listing);
 
-		Logger_LogFmt(this->logger, Logger_Level_Info,
-			$("% items found (limit=%)."),
+		Logger_Info(this->logger, $("% items found (limit=%)."),
 			Integer_ToString(listing->len),
 			(this->limit == -1)
 				? $("no")
@@ -95,7 +94,7 @@ def(void, Retrieve) {
 			}
 
 			if (listing->buf[j].id.len == 0) {
-				Logger_LogFmt(this->logger, Logger_Level_Error,
+				Logger_Error(this->logger,
 					$("[%/%] The ID is empty!"),
 					Integer_ToString(j + 1),
 					Integer_ToString(listing->len));
@@ -103,7 +102,7 @@ def(void, Retrieve) {
 				goto next;
 			}
 
-			Logger_LogFmt(this->logger, Logger_Level_Info,
+			Logger_Info(this->logger,
 				$("[%/%] Fetching podcast '%' (%)..."),
 				Integer_ToString(j + 1),
 				Integer_ToString(listing->len),
@@ -111,7 +110,7 @@ def(void, Retrieve) {
 				listing->buf[j].id);
 
 			if (Cache_Has(cache, listing->buf[j].id)) {
-				Logger_Log(this->logger, Logger_Level_Info,
+				Logger_Info(this->logger,
 					$("Already in cache. Skipping..."));
 
 				goto next;

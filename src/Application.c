@@ -10,7 +10,6 @@ static ProviderInterface* providers[] = {
 };
 
 def(void, Init, StorageInstance storage) {
-	this->logger  = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage = storage;
 
 	Array_Init(this->providers, 16);
@@ -55,8 +54,9 @@ def(void, Retrieve) {
 	for (size_t i = 0; i < this->providers->len; i++) {
 		ProviderFacadeInstance provider = this->providers->buf[i];
 
-		Logger_LogFmt(this->logger, Logger_Level_Info,
-			$("Processing provider '%'..."),
+		Logger *logger = Debugger_GetLogger(Debugger_GetInstance());
+
+		Logger_Info(logger, $("Processing provider '%'..."),
 			ProviderFacade_GetName(provider));
 
 		ProviderFacade_Retrieve(provider);

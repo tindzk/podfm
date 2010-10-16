@@ -11,8 +11,7 @@ static def(ProviderFacadeInstance, NewProvider, String name) {
 		Application_AddProvider(this->app, name);
 
 	if (ProviderFacade_IsNull(provider)) {
-		Logger_LogFmt(this->logger, Logger_Level_Error,
-			$("Plugin '%' not found!"),
+		Logger_Error(this->logger, $("Plugin '%' not found!"),
 			name);
 	}
 
@@ -25,7 +24,7 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 		ProviderFacadeInstance provider = ProviderFacade_Null();
 
 		if (child->type == YAML_NodeType_Item) {
-			Logger_LogFmt(this->logger, Logger_Level_Debug,
+			Logger_Debug(this->logger,
 				$("Adding provider '%' (%)..."),
 				YAML_Item(child)->value,
 				YAML_Item(child)->key);
@@ -37,7 +36,7 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 					YAML_Item(child)->value);
 			}
 		} else if (child->type == YAML_NodeType_Section) {
-			Logger_LogFmt(this->logger, Logger_Level_Debug,
+			Logger_Debug(this->logger,
 				$("Adding provider '%'..."),
 				YAML_Section(child)->name);
 
@@ -78,9 +77,8 @@ def(void, Parse) {
 			Application_GetStorage(this->app));
 
 	if (!Path_Exists(path)) {
-		Logger_LogFmt(this->logger, Logger_Level_Fatal,
-			$("The subscriptions file % does not exist!"),
-			path);
+		Logger_Fatal(this->logger,
+			$("The subscriptions file % does not exist!"), path);
 
 		goto out;
 	}

@@ -28,7 +28,7 @@ def(void, Init, StorageInstance storage, String provider) {
 	if (s.len == s.size) {
 		Logger *logger = Debugger_GetLogger(Debugger_GetInstance());
 
-		Logger_Log(logger, Logger_Level_Fatal,
+		Logger_Fatal(logger,
 			$("The index file is too large. Remove all unneeded lines."));
 
 		throw(exc, excIndexFileTooLarge);

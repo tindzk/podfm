@@ -11,9 +11,7 @@
 #define self Application
 
 class(self) {
-	Logger *logger;
 	StorageInstance storage;
-
 	Array(ProviderFacadeInstance, *providers);
 };
 

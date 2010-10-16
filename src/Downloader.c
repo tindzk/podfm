@@ -105,8 +105,7 @@ def(void, Get, Podcast podcast, String url) {
 
 	HTTP_Client_Request(&client, parts.path);
 
-	Logger_LogFmt(this->logger, Logger_Level_Debug,
-		$("URL: %"), url);
+	Logger_Debug(this->logger, $("URL: %"), url);
 
 	URL_Parts_Destroy(&parts);
 
@@ -116,17 +115,14 @@ def(void, Get, Podcast podcast, String url) {
 
 	if (this->location.len > 0) {
 		if (cnt > 3) {
-			Logger_Log(this->logger, Logger_Level_Error,
-				$("Redirection loop."));
+			Logger_Error(this->logger, $("Redirection loop."));
 
 			goto out;
 		}
 
 		cnt++;
 
-		Logger_LogFmt(this->logger, Logger_Level_Debug,
-			$("Redirecting..."),
-			this->location);
+		Logger_Debug(this->logger, $("Redirecting..."));
 
 		call(Get, podcast, this->location);
 
@@ -136,8 +132,7 @@ def(void, Get, Podcast podcast, String url) {
 	String full = call(BuildPath, podcast,
 		ref(GetMediaExtension)(parts.path));
 
-	Logger_LogFmt(this->logger, Logger_Level_Debug,
-		$("Destination: %"), full);
+	Logger_Debug(this->logger, $("Destination: %"), full);
 
 	File file;
 	File_Open(&file, full,
@@ -210,6 +205,5 @@ def(void, SaveText, Podcast podcast, String text) {
 
 	File_Close(&file);
 
-	Logger_Log(this->logger, Logger_Level_Info,
-		$("Saved transcript."));
+	Logger_Info(this->logger, $("Saved transcript."));
 }
