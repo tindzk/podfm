@@ -10,4 +10,4 @@
 #undef self
 #define self Providers_RFI
 
-ProviderInfo ref(Info);
+ProviderInterface ref(ProviderImpl);

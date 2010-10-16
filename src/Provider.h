@@ -7,6 +7,7 @@
 #import "Downloader.h"
 
 typedef struct {
+	String id;
 	size_t size;
 
 	void (*init)       (GenericClass this);
@@ -15,11 +16,6 @@ typedef struct {
 	void (*getListing) (GenericClass this, String name, Listing *res);
 	void (*fetch)      (GenericClass this, DownloaderClass dl, Podcast item);
 } ProviderInterface;
-
-typedef struct {
-	String id;
-	ProviderInterface methods;
-} ProviderInfo;
 
 #undef self
 #define self Provider
@@ -36,7 +32,7 @@ typedef struct {
 	StorageClass       storage;
 } Class(self);
 
-def(void, Init, StorageClass storage, ProviderInterface *itf, String providerId);
+def(void, Init, StorageClass storage, ProviderInterface *itf);
 def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);

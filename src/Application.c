@@ -1,12 +1,12 @@
 #import "Application.h"
 #import <App.h>
 
-static ProviderInfo* providers[] = {
+static ProviderInterface* providers[] = {
 	/* French */
-	&Providers_RFI_Info,
+	&Providers_RFI_ProviderImpl,
 
 	/* General */
-	&Providers_RSS_Info
+	&Providers_RSS_ProviderImpl
 };
 
 def(void, Init, StorageClass storage) {
@@ -45,9 +45,7 @@ def(ProviderClass, AddProvider, String id) {
 		instance.provider = Provider_New();
 
 		Provider_Init(instance.provider,
-			this->storage,
-			&providers[i]->methods,
-			providers[i]->id);
+			this->storage, providers[i]);
 
 		Array_Push(this->providers, instance);
 

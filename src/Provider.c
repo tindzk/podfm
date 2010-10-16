@@ -1,10 +1,10 @@
 #import "Provider.h"
 #import <App.h>
 
-def(void, Init, StorageClass storage, ProviderInterface *itf, String providerId) {
+def(void, Init, StorageClass storage, ProviderInterface *itf) {
 	this->logger   = Debugger_GetLogger(Debugger_GetClass());
 	this->storage  = storage;
-	this->name     = String_Clone(providerId);
+	this->name     = String_Clone(itf->id);
 	this->limit    = -1;
 	this->inclDate = true;
 

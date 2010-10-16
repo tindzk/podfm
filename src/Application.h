@@ -11,7 +11,7 @@
 #define self Application
 
 typedef struct {
-	ProviderInfo  *item;
+	ProviderInterface *item;
 	ProviderClass provider;
 } ProviderInstance;
 

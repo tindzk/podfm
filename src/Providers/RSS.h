@@ -11,4 +11,4 @@
 #undef self
 #define self Providers_RSS
 
-ProviderInfo ref(Info);
+ProviderInterface ref(ProviderImpl);

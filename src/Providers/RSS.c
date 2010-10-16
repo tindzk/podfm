@@ -90,14 +90,12 @@ def(void, Fetch, DownloaderClass dl, Podcast item) {
 	Downloader_Get(dl, item, data->podcast);
 }
 
-ProviderInfo ref(Info) = {
-	.id      = $("rss"),
-	.methods = {
-		.size        = sizeof(self),
-		.init        = (void *) ref(Init),
-		.destroy     = (void *) ref(Destroy),
-		.destroyItem = (void *) ref(DestroyItem),
-		.getListing  = (void *) ref(GetListing),
-		.fetch       = (void *) ref(Fetch)
-	}
+ProviderInterface ref(ProviderImpl) = {
+	.id          = $("rss"),
+	.size        = sizeof(self),
+	.init        = (void *) ref(Init),
+	.destroy     = (void *) ref(Destroy),
+	.destroyItem = (void *) ref(DestroyItem),
+	.getListing  = (void *) ref(GetListing),
+	.fetch       = (void *) ref(Fetch)
 };
