@@ -4,8 +4,7 @@
 
 #import "Storage.h"
 #import "Debugger.h"
-#import "Providers/RFI.h"
-#import "Providers/RSS.h"
+#import "Providers.h"
 #import "ProviderFacade.h"
 
 #undef self

@@ -1,5 +1,15 @@
-#import "RFI.h"
+#import <URL.h>
+#import <Date.h>
+#import <HTTP/Client.h>
+#import <Date/RFC822.h>
+#import <HTML/Entities.h>
+
+#import "../ProviderInterface.h"
+
 #import <App.h>
+
+#undef self
+#define self Providers_RFI
 
 typedef struct {
 	HTTP_Client client;

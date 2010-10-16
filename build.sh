@@ -12,5 +12,6 @@ mkdir -p build/{podfm,Jivai}
 	optimlevel=0          \
 	inclhdr=config.h      \
 	dbgsym=yes            \
+	add=src/Providers/*.c \
 	link=@bfd             \
 	link=@m
