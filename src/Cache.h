@@ -14,7 +14,7 @@ enum {
 	excIndexFileTooLarge = excOffset
 };
 
-typedef struct {
+record {
 	File file;
 	StringArray *items;
 } Class(self);

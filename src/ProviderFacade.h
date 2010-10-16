@@ -10,7 +10,7 @@
 #undef self
 #define self ProviderFacade
 
-typedef struct {
+record {
 	String  name;
 	ssize_t limit;
 	bool    inclDate;

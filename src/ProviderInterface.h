@@ -3,7 +3,7 @@
 #import "Podcast.h"
 #import "Downloader.h"
 
-typedef struct {
+record {
 	String id;
 	size_t size;
 

@@ -6,7 +6,7 @@
 #undef self
 #define self Debugger
 
-typedef struct {
+record {
 	Logger logger;
 } Class(Debugger);
 

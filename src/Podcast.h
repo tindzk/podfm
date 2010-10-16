@@ -2,7 +2,7 @@
 #import <Array.h>
 #import <String.h>
 
-typedef struct {
+record {
 	String id;
 	String title;
 	Date date;
@@ -14,11 +14,11 @@ typedef Array(Podcast, Listing);
 
 // ---
 
-typedef struct {
+record {
 	String podcast;    /* Podcast URL */
 } DefaultPodcastItem;
 
-typedef struct {
+record {
 	String podcast;    /* Podcast URL */
 	String transcript; /* Transcript URL */
 } TranscribedPodcastItem;

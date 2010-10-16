@@ -16,7 +16,7 @@
 #undef self
 #define self Downloader
 
-typedef struct {
+record {
 	StorageInstance storage;
 	Logger  *logger;
 	String  providerId;

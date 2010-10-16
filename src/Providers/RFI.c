@@ -11,7 +11,7 @@
 #undef self
 #define self Providers_RFI
 
-typedef struct {
+record {
 	HTTP_Client client;
 } Class(self);
 

@@ -10,7 +10,7 @@
 #undef self
 #define self Application
 
-typedef struct {
+record {
 	Logger *logger;
 	StorageInstance storage;
 

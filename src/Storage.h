@@ -4,7 +4,7 @@
 #undef self
 #define self Storage
 
-typedef struct {
+record {
 	String base;
 } Class(self);
 

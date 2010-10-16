@@ -11,7 +11,7 @@
 #undef self
 #define self Providers_RSS
 
-typedef struct {
+record {
 
 } Class(self);
 

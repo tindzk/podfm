@@ -11,7 +11,7 @@
 #undef self
 #define self Configuration
 
-typedef struct {
+record {
 	Logger *logger;
 	ApplicationInstance app;
 } Class(self);
