@@ -6,7 +6,6 @@
 #import <Date/RFC822.h>
 #import <HTML/Entities.h>
 
-#import "../Utils.h"
 #import "../Provider.h"
 
 #undef self

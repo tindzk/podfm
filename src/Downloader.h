@@ -9,9 +9,9 @@
 #import <BufferedStream.h>
 #import <Terminal/ProgressBar.h>
 
-#import "Utils.h"
 #import "Podcast.h"
 #import "Storage.h"
+#import "Debugger.h"
 
 #undef self
 #define self Downloader
@@ -24,7 +24,7 @@ typedef struct {
 	String  location;
 } Class(Downloader);
 
-def(void, Init, StorageClass storage, Logger *logger, String providerId);
+def(void, Init, StorageClass storage, String providerId);
 def(void, Destroy);
 def(void, SetInclDate, bool value);
 def(void, Get, Podcast podcast, String url);

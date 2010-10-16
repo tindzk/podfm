@@ -1,5 +1,4 @@
 #import "Cache.h"
-
 #import <App.h>
 
 size_t Modules_Cache;
@@ -12,7 +11,7 @@ void Cache0(ExceptionManager *e) {
 	exc = e;
 }
 
-def(void, Init, StorageClass storage, Logger *logger, String provider) {
+def(void, Init, StorageClass storage, String provider) {
 	String path = Storage_GetCachePath(storage, provider);
 
 	File_Open(&this->file, path,
@@ -27,6 +26,8 @@ def(void, Init, StorageClass storage, Logger *logger, String provider) {
 	s.len = File_Read(&this->file, s.buf, s.size);
 
 	if (s.len == s.size) {
+		Logger *logger = Debugger_GetLogger(Debugger_GetClass());
+
 		Logger_Log(logger, Logger_Level_Fatal,
 			$("The index file is too large. Remove all unneeded lines."));
 

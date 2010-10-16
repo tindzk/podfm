@@ -1,9 +1,9 @@
 #import <Block.h>
-#import <String.h>
 #import <Logger.h>
+#import <String.h>
 
-#import "Utils.h"
 #import "Storage.h"
+#import "Debugger.h"
 #import "Providers/RFI.h"
 #import "Providers/RSS.h"
 
@@ -22,7 +22,7 @@ typedef struct {
 	Array(ProviderInstance, *providers);
 } Class(self);
 
-def(void, Init, Logger *logger, StorageClass storage);
+def(void, Init, StorageClass storage);
 def(void, Destroy);
 def(StorageClass, GetStorage);
 def(ProviderClass, AddProvider, String id);

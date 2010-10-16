@@ -2,13 +2,13 @@
 #import <App.h>
 
 typedef struct {
-	Logger *logger;
+	void *p;
 } Class(self);
 
 extern ExceptionManager exc;
 
-def(void, Init, Logger *logger) {
-	this->logger = logger;
+def(void, Init) {
+
 }
 
 def(void, Destroy) {

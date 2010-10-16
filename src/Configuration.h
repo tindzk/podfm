@@ -5,6 +5,7 @@
 #import <FileStream.h>
 #import <BufferedStream.h>
 
+#import "Debugger.h"
 #import "Application.h"
 
 #undef self
@@ -15,5 +16,5 @@ typedef struct {
 	ApplicationClass app;
 } Class(self);
 
-def(void, Init, ApplicationClass app, Logger *logger);
+def(void, Init, ApplicationClass app);
 def(void, Parse);

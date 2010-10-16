@@ -3,16 +3,15 @@
 #import <YAML.h>
 #import <Socket.h>
 #import <Signal.h>
-#import <Logger.h>
 #import <Terminal.h>
 #import <FileStream.h>
 #import <HTTP/Client.h>
 #import <BufferedStream.h>
 #import <ExceptionManager.h>
 
-#import "Utils.h"
 #import "Cache.h"
 #import "Storage.h"
+#import "Debugger.h"
 #import "Application.h"
 #import "Configuration.h"
 
@@ -38,17 +37,6 @@ int main(int argc, char *argv[]) {
 
 	Cache0(&exc);
 
-	Logger logger;
-
-	Logger_Init(&logger, (void *) &Utils_OnLogMessage, &logger,
-		Logger_Level_Fatal |
-		Logger_Level_Crit  |
-		Logger_Level_Error |
-		Logger_Level_Warn  |
-		Logger_Level_Info  |
-		Logger_Level_Debug |
-		Logger_Level_Trace);
-
 	int res = ExitStatus_Success;
 
 	Terminal_Init(&term, File_StdIn, File_StdOut, true);
@@ -68,11 +56,11 @@ int main(int argc, char *argv[]) {
 	Storage_Init(storage, path);
 
 	ApplicationClass app = Application_AsClass(&private.app);
-	Application_Init(app, &logger, storage);
+	Application_Init(app, storage);
 
 	try (&exc) {
 		ConfigurationClass cfg = Configuration_AsClass(&private.cfg);
-		Configuration_Init(cfg, app, &logger);
+		Configuration_Init(cfg, app);
 		Configuration_Parse(cfg);
 
 		Application_Retrieve(app);

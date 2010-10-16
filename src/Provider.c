@@ -1,19 +1,18 @@
 #import "Provider.h"
-
 #import <App.h>
 
-def(void, Init, Logger *logger, StorageClass storage, ProviderInterface *itf, String providerId) {
-	this->logger          = logger;
-	this->storage         = storage;
-	this->name            = String_Clone(providerId);
-	this->limit           = -1;
-	this->inclDate        = true;
+def(void, Init, StorageClass storage, ProviderInterface *itf, String providerId) {
+	this->logger   = Debugger_GetLogger(Debugger_GetClass());
+	this->storage  = storage;
+	this->name     = String_Clone(providerId);
+	this->limit    = -1;
+	this->inclDate = true;
 
 	Array_Init(this->sources, 10);
 
 	this->methods = itf;
 	this->context = Generic_New(itf->size);
-	this->methods->init(this->context, this->logger);
+	this->methods->init(this->context);
 }
 
 def(void, Destroy) {
@@ -53,11 +52,11 @@ def(void, Retrieve) {
 	} private;
 
 	DownloaderClass dl = Downloader_AsClass(&private.dl);
-	Downloader_Init(dl, this->storage, this->logger, this->name);
+	Downloader_Init(dl, this->storage, this->name);
 	Downloader_SetInclDate(dl, this->inclDate);
 
 	CacheClass cache = Cache_AsClass(&private.cache);
-	Cache_Init(cache, this->storage, this->logger, this->name);
+	Cache_Init(cache, this->storage, this->name);
 
 	for (size_t i = 0; i < this->sources->len; i++) {
 		String source = this->sources->buf[i];

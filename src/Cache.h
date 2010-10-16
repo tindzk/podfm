@@ -4,8 +4,8 @@
 #import <Logger.h>
 #import <StringArray.h>
 
-#import "Utils.h"
 #import "Storage.h"
+#import "Debugger.h"
 
 #undef self
 #define self Cache
@@ -21,7 +21,7 @@ typedef struct {
 
 void Cache0(ExceptionManager *e);
 
-def(void, Init, StorageClass storage, Logger *logger, String provider);
+def(void, Init, StorageClass storage, String provider);
 def(void, Destroy);
 def(bool, Has, String id);
 def(void, Add, String id);

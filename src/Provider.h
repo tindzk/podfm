@@ -3,12 +3,13 @@
 #import "Cache.h"
 #import "Podcast.h"
 #import "Storage.h"
+#import "Debugger.h"
 #import "Downloader.h"
 
 typedef struct {
 	size_t size;
 
-	void (*init)       (GenericClass this, Logger *logger);
+	void (*init)       (GenericClass this);
 	void (*destroy)    (GenericClass this);
 	void (*destroyItem)(void *item);
 	void (*getListing) (GenericClass this, String name, Listing *res);
@@ -35,7 +36,7 @@ typedef struct {
 	StorageClass       storage;
 } Class(self);
 
-def(void, Init, Logger *logger, StorageClass storage, ProviderInterface *itf, String providerId);
+def(void, Init, StorageClass storage, ProviderInterface *itf, String providerId);
 def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);

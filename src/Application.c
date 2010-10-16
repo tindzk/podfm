@@ -9,8 +9,8 @@ static ProviderInfo* providers[] = {
 	&Providers_RSS_Info
 };
 
-def(void, Init, Logger *logger, StorageClass storage) {
-	this->logger  = logger;
+def(void, Init, StorageClass storage) {
+	this->logger  = Debugger_GetLogger(Debugger_GetClass());
 	this->storage = storage;
 
 	Array_Init(this->providers, 16);
@@ -45,7 +45,6 @@ def(ProviderClass, AddProvider, String id) {
 		instance.provider = Provider_New();
 
 		Provider_Init(instance.provider,
-			this->logger,
 			this->storage,
 			&providers[i]->methods,
 			providers[i]->id);

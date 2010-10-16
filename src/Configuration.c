@@ -1,10 +1,9 @@
 #import "Configuration.h"
-
 #import <App.h>
 
-def(void, Init, ApplicationClass app, Logger *logger) {
+def(void, Init, ApplicationClass app) {
 	this->app    = app;
-	this->logger = logger;
+	this->logger = Debugger_GetLogger(Debugger_GetClass());
 }
 
 static def(ProviderClass, NewProvider, String name) {

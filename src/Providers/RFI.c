@@ -2,15 +2,12 @@
 #import <App.h>
 
 typedef struct {
-	Logger *logger;
 	HTTP_Client client;
 } Class(self);
 
 extern ExceptionManager exc;
 
-def(void, Init, Logger *logger) {
-	this->logger = logger;
-
+def(void, Init) {
 	HTTP_Client_Init(&this->client, $("www.rfi.fr"));
 }
 
