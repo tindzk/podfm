@@ -45,11 +45,12 @@ def(void, GetListing, String url, Listing *res) {
 
 		/* Title */
 		item.title =
-			String_Clone(
-				String_Trim(
-					String_Between(s,
-						$("<title>"),
-						$("</title>"))));
+			HTML_Entities_Decode(
+				String_Between(s,
+					$("<title>"),
+					$("</title>")));
+
+		String_Trim(&item.title);
 
 		/* ID */
 		item.id = String_Between(s,
