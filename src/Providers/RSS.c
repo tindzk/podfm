@@ -31,7 +31,7 @@ def(void, GetListing, String url, Listing *res) {
 	try (&exc) {
 		HTTP_Client_Request(&client, parts.path);
 		HTTP_Client_FetchResponse(&client);
-	} finally {
+	} clean finally {
 		URL_Parts_Destroy(&parts);
 	} tryEnd;
 

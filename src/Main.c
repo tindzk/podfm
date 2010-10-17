@@ -37,8 +37,6 @@ int main(int argc, char *argv[]) {
 
 	Cache0(&exc);
 
-	int res = ExitStatus_Success;
-
 	Terminal_Init(&term, File_StdIn, File_StdOut, true);
 	Terminal_Configure(&term, false, true);
 
@@ -64,14 +62,14 @@ int main(int argc, char *argv[]) {
 		Configuration_Parse(cfg);
 
 		Application_Retrieve(app);
-	} catchAny(e) {
+	} clean catchAny(e) {
 		Exception_Print(e);
 
 #if Exception_SaveTrace
 		Backtrace_PrintTrace(e->trace, e->traceItems);
 #endif
 
-		res = ExitStatus_Failure;
+		excReturn ExitStatus_Failure;
 	} finally {
 		Application_Destroy(app);
 		Storage_Destroy(storage);
@@ -79,5 +77,5 @@ int main(int argc, char *argv[]) {
 		Terminal_Destroy(&term);
 	} tryEnd;
 
-	return res;
+	return ExitStatus_Success;
 }

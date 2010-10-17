@@ -40,7 +40,7 @@ def(void, GetListing, String name, Listing *res) {
 	try (&exc) {
 		HTTP_Client_Request(&this->client, $("www.rfi.fr"), path);
 		HTTP_Client_FetchResponse(&this->client);
-	} finally {
+	} clean finally {
 		String_Destroy(&path);
 	} tryEnd;
 
