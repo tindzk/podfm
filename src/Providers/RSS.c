@@ -26,9 +26,9 @@ def(void, GetListing, String url, Listing *res) {
 
 	HTTP_Client client;
 	HTTP_Client_Init(&client);
-	HTTP_Client_Open(&client, parts.host);
 
 	try (&exc) {
+		HTTP_Client_Open(&client, parts.host);
 		HTTP_Client_Request(&client, parts.path);
 		HTTP_Client_FetchResponse(&client);
 	} clean finally {

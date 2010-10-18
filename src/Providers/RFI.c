@@ -31,13 +31,13 @@ void ref(DestroyItem)(TranscribedPodcastItem *item) {
 }
 
 def(void, GetListing, String name, Listing *res) {
-	if (!HTTP_Client_IsConnected(&this->client)) {
-		HTTP_Client_Open(&this->client);
-	}
-
 	String path = String_Format($("/radiofr/podcast/%.xml"), name);
 
 	try (&exc) {
+		if (!HTTP_Client_IsConnected(&this->client)) {
+			HTTP_Client_Open(&this->client);
+		}
+
 		HTTP_Client_Request(&this->client, $("www.rfi.fr"), path);
 		HTTP_Client_FetchResponse(&this->client);
 	} clean finally {
