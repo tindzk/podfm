@@ -27,17 +27,18 @@ def(void, GetListing, String url, Listing *res) {
 	HTTP_Client client;
 	HTTP_Client_Init(&client);
 
+	String buf;
+
 	try (&exc) {
 		HTTP_Client_Open(&client, parts.host);
 		HTTP_Client_Request(&client, parts.path);
 		HTTP_Client_FetchResponse(&client);
+		buf = HTTP_Client_Read(&client, 50 * 1024);
 	} clean finally {
 		URL_Parts_Destroy(&parts);
+		HTTP_Client_Destroy(&client);
 	} tryEnd;
 
-	String buf = HTTP_Client_Read(&client, 50 * 1024);
-
-	HTTP_Client_Destroy(&client);
 
 	String s;
 	ssize_t pos = 0;
