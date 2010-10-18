@@ -1,6 +1,8 @@
 #import "ProviderFacade.h"
 #import <App.h>
 
+extern ExceptionManager exc;
+
 def(void, Init, StorageInstance storage, ProviderInterface *itf) {
 	this->logger   = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage  = storage;
@@ -87,16 +89,44 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 			goto next;
 		}
 
-		this->methods->fetch(this->context, dl,
-			listing->buf[i]);
+		try (&exc) {
+			this->methods->fetch(this->context, dl,
+				listing->buf[i]);
 
-		Cache_Add(cache, listing->buf[i].id);
+			Cache_Add(cache, listing->buf[i].id);
+		} clean finally {
+		next:
+			String_Destroy(&listing->buf[i].id);
+			String_Destroy(&listing->buf[i].title);
+			this->methods->destroyItem(listing->buf[i].data);
+			Memory_Free(listing->buf[i].data);
+		} tryEnd;
+	}
+}
 
-	next:
-		String_Destroy(&listing->buf[i].id);
-		String_Destroy(&listing->buf[i].title);
-		this->methods->destroyItem(listing->buf[i].data);
-		Memory_Free(listing->buf[i].data);
+static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
+	for (size_t i = 0; i < this->sources->len; i++) {
+		String source = this->sources->buf[i];
+
+		Logger_Info(this->logger,
+			$("Requesting listing for source '%'..."), source);
+
+		Listing *listing;
+		Array_Init(listing, 128);
+
+		try (&exc) {
+			this->methods->getListing(this->context, source, listing);
+
+			Logger_Info(this->logger, $("% items found (limit=%)."),
+				Integer_ToString(listing->len),
+				(this->limit == -1)
+					? $("no")
+					: Integer_ToString(this->limit));
+
+			call(Fetch, dl, cache, listing);
+		} clean finally {
+			Array_Destroy(listing);
+		} tryEnd;
 	}
 }
 
@@ -113,29 +143,10 @@ def(void, Retrieve) {
 	CacheInstance cache = Cache_FromObject(&private.cache);
 	Cache_Init(cache, this->storage, this->name);
 
-	for (size_t i = 0; i < this->sources->len; i++) {
-		String source = this->sources->buf[i];
-
-		Logger_Info(this->logger,
-			$("Requesting listing for source '%'..."), source);
-
-		Listing *listing;
-		Array_Init(listing, 128);
-
-		this->methods->getListing(this->context, source, listing);
-
-		Logger_Info(this->logger, $("% items found (limit=%)."),
-			Integer_ToString(listing->len),
-			(this->limit == -1)
-				? $("no")
-				: Integer_ToString(this->limit));
-
-		call(Fetch, dl, cache, listing);
-
-		Array_Destroy(listing);
-	}
-
-	Downloader_Destroy(dl);
-
-	Cache_Destroy(cache);
+	try (&exc) {
+		call(Request, dl, cache);
+	} clean finally {
+		Downloader_Destroy(dl);
+		Cache_Destroy(cache);
+	} tryEnd;
 }
