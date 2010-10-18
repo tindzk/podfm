@@ -8,6 +8,8 @@ class(self) {
 	String base;
 };
 
+ExtendClass(self);
+
 def(void, Init, String base);
 def(void, Destroy);
 def(String, GetBase);

@@ -19,6 +19,8 @@ class(self) {
 	StringArray *items;
 };
 
+ExtendClass(self);
+
 void Cache0(ExceptionManager *e);
 
 def(void, Init, StorageInstance storage, String provider);

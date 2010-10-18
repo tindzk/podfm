@@ -16,5 +16,7 @@ class(self) {
 	ApplicationInstance app;
 };
 
+ExtendClass(self);
+
 def(void, Init, ApplicationInstance app);
 def(void, Parse);

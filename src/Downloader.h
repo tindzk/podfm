@@ -24,6 +24,8 @@ class(self) {
 	String  location;
 };
 
+ExtendClass(self);
+
 def(void, Init, StorageInstance storage, String providerId);
 def(void, Destroy);
 def(void, SetInclDate, bool value);

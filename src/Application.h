@@ -15,6 +15,8 @@ class(self) {
 	Array(ProviderFacadeInstance, *providers);
 };
 
+ExtendClass(self);
+
 def(void, Init, StorageInstance storage);
 def(void, Destroy);
 def(StorageInstance, GetStorage);

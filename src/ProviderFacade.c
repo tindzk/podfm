@@ -131,16 +131,11 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 }
 
 def(void, Retrieve) {
-	struct {
-		Cache      cache;
-		Downloader dl;
-	} private;
-
-	DownloaderInstance dl = Downloader_FromObject(&private.dl);
+	DownloaderInstance dl = Downloader_NewStack();
 	Downloader_Init(dl, this->storage, this->name);
 	Downloader_SetInclDate(dl, this->inclDate);
 
-	CacheInstance cache = Cache_FromObject(&private.cache);
+	CacheInstance cache = Cache_NewStack();
 	Cache_Init(cache, this->storage, this->name);
 
 	try (&exc) {

@@ -44,20 +44,14 @@ int main(int argc, char *argv[]) {
 		? String_FromNul(argv[1])
 		: $(DefaultPath);
 
-	struct {
-		Storage       storage;
-		Application   app;
-		Configuration cfg;
-	} private;
-
-	StorageInstance storage = Storage_FromObject(&private.storage);
+	StorageInstance storage = Storage_NewStack();
 	Storage_Init(storage, path);
 
-	ApplicationInstance app = Application_FromObject(&private.app);
+	ApplicationInstance app = Application_NewStack();
 	Application_Init(app, storage);
 
 	try (&exc) {
-		ConfigurationInstance cfg = Configuration_FromObject(&private.cfg);
+		ConfigurationInstance cfg = Configuration_NewStack();
 		Configuration_Init(cfg, app);
 		Configuration_Parse(cfg);
 
