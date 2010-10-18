@@ -58,6 +58,48 @@ def(void, AddSource, String source) {
 	Array_Push(this->sources, String_Clone(source));
 }
 
+static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *listing) {
+	for (size_t i = 0; i < listing->len; i++) {
+		if (this->limit >= 0 && i >= (size_t) this->limit) {
+			goto next;
+		}
+
+		if (listing->buf[i].id.len == 0) {
+			Logger_Error(this->logger,
+				$("[%/%] The ID is empty!"),
+				Integer_ToString(i + 1),
+				Integer_ToString(listing->len));
+
+			goto next;
+		}
+
+		Logger_Info(this->logger,
+			$("[%/%] Fetching podcast '%' (%)..."),
+			Integer_ToString(i + 1),
+			Integer_ToString(listing->len),
+			listing->buf[i].title,
+			listing->buf[i].id);
+
+		if (Cache_Has(cache, listing->buf[i].id)) {
+			Logger_Info(this->logger,
+				$("Already in cache. Skipping..."));
+
+			goto next;
+		}
+
+		this->methods->fetch(this->context, dl,
+			listing->buf[i]);
+
+		Cache_Add(cache, listing->buf[i].id);
+
+	next:
+		String_Destroy(&listing->buf[i].id);
+		String_Destroy(&listing->buf[i].title);
+		this->methods->destroyItem(listing->buf[i].data);
+		Memory_Free(listing->buf[i].data);
+	}
+}
+
 def(void, Retrieve) {
 	struct {
 		Cache      cache;
@@ -88,45 +130,7 @@ def(void, Retrieve) {
 				? $("no")
 				: Integer_ToString(this->limit));
 
-		for (size_t j = 0; j < listing->len; j++) {
-			if (this->limit >= 0 && j >= (size_t) this->limit) {
-				goto next;
-			}
-
-			if (listing->buf[j].id.len == 0) {
-				Logger_Error(this->logger,
-					$("[%/%] The ID is empty!"),
-					Integer_ToString(j + 1),
-					Integer_ToString(listing->len));
-
-				goto next;
-			}
-
-			Logger_Info(this->logger,
-				$("[%/%] Fetching podcast '%' (%)..."),
-				Integer_ToString(j + 1),
-				Integer_ToString(listing->len),
-				listing->buf[j].title,
-				listing->buf[j].id);
-
-			if (Cache_Has(cache, listing->buf[j].id)) {
-				Logger_Info(this->logger,
-					$("Already in cache. Skipping..."));
-
-				goto next;
-			}
-
-			this->methods->fetch(this->context, dl,
-				listing->buf[j]);
-
-			Cache_Add(cache, listing->buf[j].id);
-
-		next:
-			String_Destroy(&listing->buf[j].id);
-			String_Destroy(&listing->buf[j].title);
-			this->methods->destroyItem(listing->buf[j].data);
-			Memory_Free(listing->buf[j].data);
-		}
+		call(Fetch, dl, cache, listing);
 
 		Array_Destroy(listing);
 	}
