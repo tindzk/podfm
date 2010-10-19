@@ -49,13 +49,7 @@ def(void, Destroy) {
 }
 
 def(bool, Has, String id) {
-	for (size_t i = 0; i < this->items->len; i++) {
-		if (String_Equals(this->items->buf[i], id)) {
-			return true;
-		}
-	}
-
-	return false;
+	return StringArray_Contains(this->items, id);
 }
 
 def(void, Add, String id) {
