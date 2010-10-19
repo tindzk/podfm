@@ -44,7 +44,7 @@ def(void, Init, StorageInstance storage, String provider) {
 def(void, Destroy) {
 	File_Close(&this->file);
 
-	Array_Foreach(this->items, String_Destroy);
+	StringArray_Destroy(this->items);
 	StringArray_Free(this->items);
 }
 
