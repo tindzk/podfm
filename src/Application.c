@@ -10,9 +10,8 @@ static ProviderInterface* providers[] = {
 };
 
 def(void, Init, StorageInstance storage) {
-	this->storage = storage;
-
-	Array_Init(this->providers, 16);
+	this->storage   = storage;
+	this->providers = Providers_New(16);
 }
 
 def(void, Destroy) {
@@ -21,7 +20,7 @@ def(void, Destroy) {
 		ProviderFacade_Free(*provider);
 	});
 
-	Array_Destroy(this->providers);
+	Providers_Free(this->providers);
 }
 
 def(StorageInstance, GetStorage) {
@@ -42,7 +41,7 @@ def(ProviderFacadeInstance, AddProvider, String id) {
 
 		ProviderFacade_Init(provider, this->storage, providers[i]);
 
-		Array_Push(this->providers, provider);
+		Providers_Push(&this->providers, provider);
 
 		return provider;
 	}

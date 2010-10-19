@@ -21,7 +21,7 @@ void ref(DestroyItem)(DefaultPodcastItem *item) {
 	String_Destroy(&item->podcast);
 }
 
-def(void, GetListing, String url, Listing *res) {
+def(void, GetListing, String url, Listing **res) {
 	URL_Parts parts = URL_Parse(url);
 
 	HTTP_Client client;
@@ -82,7 +82,7 @@ def(void, GetListing, String url, Listing *res) {
 		data->podcast = String_Clone(String_Between(s, $("<enclosure url=\""), $("\"")));
 		item.data = data;
 
-		Array_Push(res, item);
+		Listing_Push(res, item);
 	}
 
 	String_Destroy(&buf);

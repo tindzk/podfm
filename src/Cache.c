@@ -47,7 +47,7 @@ def(void, Destroy) {
 	File_Close(&this->file);
 
 	Array_Foreach(this->items, String_Destroy);
-	Array_Destroy(this->items);
+	StringArray_Free(this->items);
 }
 
 def(bool, Has, String id) {
@@ -65,5 +65,5 @@ def(void, Add, String id) {
 	File_Write(&this->file, line.buf, line.len);
 	String_Destroy(&line);
 
-	Array_Push(this->items, String_Clone(id));
+	StringArray_Push(&this->items, String_Clone(id));
 }

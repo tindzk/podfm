@@ -10,9 +10,11 @@
 #undef self
 #define self Application
 
+Array_Define(ProviderFacadeInstance, Providers);
+
 class(self) {
 	StorageInstance storage;
-	Array(ProviderFacadeInstance, *providers);
+	Providers *providers;
 };
 
 ExtendClass(self);

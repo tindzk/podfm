@@ -9,8 +9,7 @@ def(void, Init, StorageInstance storage, ProviderInterface *itf) {
 	this->name     = String_Clone(itf->id);
 	this->limit    = -1;
 	this->inclDate = true;
-
-	Array_Init(this->sources, 10);
+	this->sources  = StringArray_New(10);
 
 	this->methods = itf;
 
@@ -37,7 +36,7 @@ def(void, Destroy) {
 	String_Destroy(&this->name);
 
 	Array_Foreach(this->sources, String_Destroy);
-	Array_Destroy(this->sources);
+	StringArray_Free(this->sources);
 }
 
 def(String, GetName) {
@@ -111,11 +110,10 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 		Logger_Info(this->logger,
 			$("Requesting listing for source '%'..."), source);
 
-		Listing *listing;
-		Array_Init(listing, 128);
+		Listing *listing = Listing_New(128);
 
 		try (&exc) {
-			this->methods->getListing(this->context, source, listing);
+			this->methods->getListing(this->context, source, &listing);
 
 			Logger_Info(this->logger, $("% items found (limit=%)."),
 				Integer_ToString(listing->len),
@@ -125,7 +123,7 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 
 			call(Fetch, dl, cache, listing);
 		} clean finally {
-			Array_Destroy(listing);
+			Listing_Free(listing);
 		} tryEnd;
 	}
 }

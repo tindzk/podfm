@@ -30,7 +30,7 @@ void ref(DestroyItem)(TranscribedPodcastItem *item) {
 	String_Destroy(&item->transcript);
 }
 
-def(void, GetListing, String name, Listing *res) {
+def(void, GetListing, String name, Listing **res) {
 	String path = String_Format($("/radiofr/podcast/%.xml"), name);
 
 	try (&exc) {
@@ -94,7 +94,7 @@ def(void, GetListing, String name, Listing *res) {
 
 		item.data = data;
 
-		Array_Push(res, item);
+		Listing_Push(res, item);
 	}
 
 	String_Destroy(&buf);

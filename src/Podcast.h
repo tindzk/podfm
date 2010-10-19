@@ -10,7 +10,7 @@ class(Podcast) {
 	void *data;
 };
 
-typedef Array(Podcast, Listing);
+Array_Define(Podcast, Listing);
 
 // ---
 
