@@ -60,7 +60,7 @@ def(bool, Has, String id) {
 
 def(void, Add, String id) {
 	String line = String_Concat(id, '\n');
-	File_Write(&this->file, line.buf, line.len);
+	File_Write(&this->file, line);
 	String_Destroy(&line);
 
 	StringArray_Push(&this->items, String_Clone(id));
