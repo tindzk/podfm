@@ -23,7 +23,7 @@ def(void, Init, StorageInstance storage, String provider) {
 
 	String s = HeapString(100 * 1024);
 
-	s.len = File_Read(&this->file, s.buf, s.size);
+	File_Read(&this->file, &s);
 
 	if (s.len == s.size) {
 		Logger *logger = Debugger_GetLogger(Debugger_GetInstance());
