@@ -36,9 +36,7 @@ def(void, Init, StorageInstance storage, String provider) {
 
 	this->items = String_Split(s, '\n');
 
-	for (size_t i = 0; i < this->items->len; i++) {
-		this->items->buf[i] = String_Clone(this->items->buf[i]);
-	}
+	StringArray_ToHeap(this->items);
 
 	String_Destroy(&s);
 }
@@ -61,7 +59,7 @@ def(bool, Has, String id) {
 }
 
 def(void, Add, String id) {
-	String line = String_Format($("%\n"), id);
+	String line = String_Concat(id, '\n');
 	File_Write(&this->file, line.buf, line.len);
 	String_Destroy(&line);
 
