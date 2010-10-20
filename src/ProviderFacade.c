@@ -59,10 +59,18 @@ def(void, AddSource, String source) {
 	Array_Push(this->sources, String_Clone(source));
 }
 
+static def(void, DestroyPodcast, Podcast *podcast) {
+	String_Destroy(&podcast->id);
+	String_Destroy(&podcast->title);
+	this->methods->destroyItem(podcast->data);
+	Memory_Free(podcast->data);
+}
+
 static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *listing) {
 	for (size_t i = 0; i < listing->len; i++) {
 		if (this->limit >= 0 && i >= (size_t) this->limit) {
-			goto next;
+			call(DestroyPodcast, &listing->buf[i]);
+			continue;
 		}
 
 		if (listing->buf[i].id.len == 0) {
@@ -71,7 +79,8 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 				Integer_ToString(i + 1),
 				Integer_ToString(listing->len));
 
-			goto next;
+			call(DestroyPodcast, &listing->buf[i]);
+			continue;
 		}
 
 		Logger_Info(this->logger,
@@ -85,7 +94,8 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 			Logger_Info(this->logger,
 				$("Already in cache. Skipping..."));
 
-			goto next;
+			call(DestroyPodcast, &listing->buf[i]);
+			continue;
 		}
 
 		try (&exc) {
@@ -94,11 +104,7 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 
 			Cache_Add(cache, listing->buf[i].id);
 		} clean finally {
-		next:
-			String_Destroy(&listing->buf[i].id);
-			String_Destroy(&listing->buf[i].title);
-			this->methods->destroyItem(listing->buf[i].data);
-			Memory_Free(listing->buf[i].data);
+			call(DestroyPodcast, &listing->buf[i]);
 		} tryEnd;
 	}
 }
