@@ -6,18 +6,7 @@ extern Terminal term;
 static def(void, Init);
 static def(void, OnLogMessage, String msg, Logger_Level level, String file, int line);
 
-/* Design pattern: Singleton */
-DebuggerInstance ref(GetInstance)(void) {
-	static Debugger         storage;
-	static DebuggerInstance instance;
-
-	if (Debugger_IsNull(instance)) {
-		instance = ref(FromObject)(&storage);
-		ref(Init)(instance);
-	}
-
-	return instance;
-}
+Singleton(self);
 
 static def(void, Init) {
 	Logger_Init(&this->logger, (void *) ref(OnLogMessage), this,

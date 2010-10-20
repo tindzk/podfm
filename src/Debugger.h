@@ -11,4 +11,4 @@ class(self) {
 };
 
 def(Logger *, GetLogger);
-DebuggerInstance ref(GetInstance)(void);
+SingletonPrototype(self);
