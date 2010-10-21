@@ -1,13 +1,9 @@
 #import "Cache.h"
 #import <App.h>
 
-size_t Modules_Cache;
-
 static ExceptionManager *exc;
 
 void Cache0(ExceptionManager *e) {
-	Modules_Cache = Module_Register(String("Cache"));
-
 	exc = e;
 }
 

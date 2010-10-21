@@ -11,3 +11,5 @@
 #define Logger_DisabledLevels 0
 
 #define Backtrace_HasBFD
+
+#import "Manifest.h"

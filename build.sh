@@ -6,6 +6,7 @@ mkdir -p build/{podfm,Jivai}
 	build                 \
 	output=podfm.bin      \
 	main=src/Main.c       \
+	manifest=Manifest.h   \
 	include=../Jivai/src  \
 	map=src:build/podfm   \
 	map=../Jivai/src:build/Jivai \

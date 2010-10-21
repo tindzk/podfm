@@ -3,34 +3,33 @@
 
 extern ExceptionManager exc;
 
-def(void, Init, StorageInstance storage, ProviderInterface *itf) {
+def(void, Init, StorageInstance storage, ProviderInterface *provider) {
 	this->logger   = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage  = storage;
-	this->name     = String_Clone(itf->id);
+	this->name     = String_Clone(provider->id);
 	this->limit    = -1;
 	this->inclDate = true;
 	this->sources  = StringArray_New(10);
+	this->provider = provider;
 
-	this->methods = itf;
-
-	if (itf->size > 0) {
-		this->context = Generic_New(itf->size);
+	if (provider->size > 0) {
+		this->instance = Generic_New(provider->size);
 	} else {
-		this->context = Generic_Null();
+		this->instance = Generic_Null();
 	}
 
-	if (this->methods->init != NULL) {
-		this->methods->init(this->context);
+	if (this->provider->init != NULL) {
+		this->provider->init(this->instance);
 	}
 }
 
 def(void, Destroy) {
-	if (this->methods->destroy != NULL) {
-		this->methods->destroy(this->context);
+	if (this->provider->destroy != NULL) {
+		this->provider->destroy(this->instance);
 	}
 
-	if (!Generic_IsNull(this->context)) {
-		Generic_Free(this->context);
+	if (!Generic_IsNull(this->instance)) {
+		Generic_Free(this->instance);
 	}
 
 	String_Destroy(&this->name);
@@ -62,7 +61,7 @@ def(void, AddSource, String source) {
 static def(void, DestroyPodcast, Podcast *podcast) {
 	String_Destroy(&podcast->id);
 	String_Destroy(&podcast->title);
-	this->methods->destroyItem(podcast->data);
+	this->provider->destroyItem(podcast->data);
 	Memory_Free(podcast->data);
 }
 
@@ -99,7 +98,7 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 		}
 
 		try (&exc) {
-			this->methods->fetch(this->context, dl,
+			this->provider->fetch(this->instance, dl,
 				listing->buf[i]);
 
 			Cache_Add(cache, listing->buf[i].id);
@@ -119,7 +118,7 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 		Listing *listing = Listing_New(128);
 
 		try (&exc) {
-			this->methods->getListing(this->context, source, &listing);
+			this->provider->getListing(this->instance, source, &listing);
 
 			Logger_Info(this->logger, $("% items found (limit=%)."),
 				Integer_ToString(listing->len),

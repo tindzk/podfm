@@ -17,14 +17,14 @@ class(self) {
 
 	Logger            *logger;
 	StringArray       *sources;
-	ProviderInterface *methods;
-	GenericInstance   context;
+	ProviderInterface *provider;
+	GenericInstance   instance;
 	StorageInstance   storage;
 };
 
 ExtendClass(self);
 
-def(void, Init, StorageInstance storage, ProviderInterface *itf);
+def(void, Init, StorageInstance storage, ProviderInterface *provider);
 def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);

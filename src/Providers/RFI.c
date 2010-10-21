@@ -115,7 +115,7 @@ def(void, Fetch, DownloaderInstance dl, Podcast item) {
 		try (&exc) {
 			HTTP_Client_Request(&this->client, parts.host, parts.path);
 			HTTP_Client_FetchResponse(&this->client);
-		} finally {
+		} clean finally {
 			URL_Parts_Destroy(&parts);
 		} tryEnd;
 

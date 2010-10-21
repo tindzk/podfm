@@ -4,10 +4,10 @@
 #import <Socket.h>
 #import <Signal.h>
 #import <Terminal.h>
+#import <Exception.h>
 #import <FileStream.h>
 #import <HTTP/Client.h>
 #import <BufferedStream.h>
-#import <ExceptionManager.h>
 
 #import "Cache.h"
 #import "Storage.h"
@@ -56,11 +56,11 @@ int main(int argc, char *argv[]) {
 		Configuration_Parse(cfg);
 
 		Application_Retrieve(app);
-	} clean catchAny(e) {
-		Exception_Print(e);
+	} clean catchAny {
+		ExceptionManager_Print(&exc, e);
 
 #if Exception_SaveTrace
-		Backtrace_PrintTrace(e->trace, e->traceItems);
+		Backtrace_PrintTrace(exc.e.trace, exc.e.traceItems);
 #endif
 
 		excReturn ExitStatus_Failure;
