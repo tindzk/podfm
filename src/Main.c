@@ -44,18 +44,18 @@ int main(int argc, char *argv[]) {
 		? String_FromNul(argv[1])
 		: $(DefaultPath);
 
-	StorageInstance storage = Storage_NewStack();
-	Storage_Init(storage, path);
+	Storage storage;
+	Storage_Init(&storage, path);
 
-	ApplicationInstance app = Application_NewStack();
-	Application_Init(app, storage);
+	Application app;
+	Application_Init(&app, &storage);
 
 	try (&exc) {
-		ConfigurationInstance cfg = Configuration_NewStack();
-		Configuration_Init(cfg, app);
-		Configuration_Parse(cfg);
+		Configuration cfg;
+		Configuration_Init(&cfg, &app);
+		Configuration_Parse(&cfg);
 
-		Application_Retrieve(app);
+		Application_Retrieve(&app);
 	} clean catchAny {
 		ExceptionManager_Print(&exc, e);
 
@@ -65,8 +65,8 @@ int main(int argc, char *argv[]) {
 
 		excReturn ExitStatus_Failure;
 	} finally {
-		Application_Destroy(app);
-		Storage_Destroy(storage);
+		Application_Destroy(&app);
+		Storage_Destroy(&storage);
 
 		Terminal_Destroy(&term);
 	} tryEnd;
