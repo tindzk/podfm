@@ -26,6 +26,10 @@ class(self) {
 
 ExtendClass(self);
 
+enum {
+	excDownloadFailed = excOffset
+};
+
 def(void, Init, StorageInstance storage, String providerId);
 def(void, Destroy);
 def(void, SetInclDate, bool value);

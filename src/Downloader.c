@@ -2,6 +2,7 @@
 #import <App.h>
 
 extern Terminal term;
+extern ExceptionManager exc;
 
 def(void, Init, StorageInstance storage, String providerId) {
 	this->logger     = Debugger_GetLogger(Debugger_GetInstance());
@@ -155,9 +156,20 @@ def(void, Get, Podcast podcast, String url) {
 	Terminal_ProgressBar pbar;
 	Terminal_ProgressBar_Init(&pbar, &term);
 
+	bool error = false;
+
 	while (HTTP_Client_Read(&client, &buf)) {
 		got += buf.len;
-		BufferedStream_Write(&output, buf.buf, buf.len);
+
+		try (&exc) {
+			BufferedStream_Write(&output, buf.buf, buf.len);
+		} clean catch(File, excWritingFailed) {
+			Logger_Error(this->logger, $("Writing failed. Disk full?"));
+			error = true;
+			excBreak;
+		} finally {
+
+		} tryEnd;
 
 		size_t percent = (size_t) ((float) got / (float) total * 100);
 
@@ -187,6 +199,10 @@ def(void, Get, Podcast podcast, String url) {
 
 out:
 	HTTP_Client_Destroy(&client);
+
+	if (error) {
+		throw(&exc, excDownloadFailed);
+	}
 }
 
 def(void, SaveText, Podcast podcast, String text) {
