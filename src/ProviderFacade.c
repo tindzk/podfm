@@ -102,7 +102,13 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 				listing->buf[i]);
 
 			Cache_Add(cache, listing->buf[i].id);
-		} clean finally {
+		} clean catchAny {
+			for (size_t j = i + 1; j < listing->len; j++) {
+				call(DestroyPodcast, &listing->buf[j]);
+			}
+
+			__exc_rethrow = true;
+		} finally {
 			call(DestroyPodcast, &listing->buf[i]);
 		} tryEnd;
 	}

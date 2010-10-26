@@ -113,6 +113,7 @@ def(void, Get, Podcast podcast, String url) {
 	HTTP_Client_FetchResponse(&client);
 
 	size_t cnt = 0;
+	bool error = false;
 
 	if (this->location.len > 0) {
 		if (cnt > 3) {
@@ -156,15 +157,12 @@ def(void, Get, Podcast podcast, String url) {
 	Terminal_ProgressBar pbar;
 	Terminal_ProgressBar_Init(&pbar, &term);
 
-	bool error = false;
-
 	while (HTTP_Client_Read(&client, &buf)) {
 		got += buf.len;
 
 		try (&exc) {
 			BufferedStream_Write(&output, buf.buf, buf.len);
 		} clean catch(File, excWritingFailed) {
-			Logger_Error(this->logger, $("Writing failed. Disk full?"));
 			error = true;
 			excBreak;
 		} finally {
@@ -193,6 +191,11 @@ def(void, Get, Podcast podcast, String url) {
 	Terminal_ProgressBar_Clear(&pbar);
 
 	String_Destroy(&buf);
+
+	if (error) {
+		/* Don't flush when closing the file. */
+		BufferedStream_Reset(&output);
+	}
 
 	BufferedStream_Close(&output);
 	BufferedStream_Destroy(&output);
