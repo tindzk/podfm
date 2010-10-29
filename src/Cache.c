@@ -19,7 +19,7 @@ def(void, Init, StorageInstance storage, String provider) {
 
 	String s = HeapString(100 * 1024);
 
-	File_Read(&this->file, &s);
+	File_Read(File_FromObject(&this->file), &s);
 
 	if (s.len == s.size) {
 		Logger *logger = Debugger_GetLogger(Debugger_GetInstance());
@@ -50,7 +50,7 @@ def(bool, Has, String id) {
 
 def(void, Add, String id) {
 	String line = String_Concat(id, '\n');
-	File_Write(&this->file, line);
+	File_Write(File_FromObject(&this->file), line);
 	String_Destroy(&line);
 
 	StringArray_Push(&this->items, String_Clone(id));

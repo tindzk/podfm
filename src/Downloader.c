@@ -220,7 +220,7 @@ def(void, SaveText, Podcast podcast, String text) {
 
 	String_Destroy(&path);
 
-	File_Write(&file, text);
+	File_Write(File_FromObject(&file), text);
 
 	File_Close(&file);
 
