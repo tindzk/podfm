@@ -9,7 +9,7 @@ static def(void, OnLogMessage, String msg, Logger_Level level, String file, int 
 Singleton(self);
 
 static def(void, Init) {
-	Logger_Init(&this->logger, (void *) ref(OnLogMessage), this,
+	Logger_Init(&this->logger, Callback(this, ref(OnLogMessage)),
 		Logger_Level_Fatal |
 		Logger_Level_Crit  |
 		Logger_Level_Error |
@@ -21,7 +21,7 @@ static def(void, Init) {
 
 static def(void, OnLogMessage, String msg, Logger_Level level, String file, int line) {
 	String color  = $("black");
-	String slevel = Logger_LevelToString(level);
+	String slevel = Logger_ResolveLevel(level);
 	String sline  = Integer_ToString(line);
 
 	if (level == Logger_Level_Fatal || level == Logger_Level_Crit || level == Logger_Level_Error) {
