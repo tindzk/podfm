@@ -145,7 +145,7 @@ def(void, Get, Podcast podcast, String url) {
 	String_Destroy(&full);
 
 	BufferedStream output;
-	BufferedStream_Init(&output, &FileStream_Methods, &file);
+	BufferedStream_Init(&output, &FileStreamImpl, &file);
 	BufferedStream_SetOutputBuffer(&output, 128 * 1024);
 
 	uint64_t got  = 0;

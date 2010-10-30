@@ -20,7 +20,7 @@ static def(ProviderFacadeInstance, NewProvider, String name) {
 
 static def(void, ParseSubscriptions, YAML_Node *node) {
 	for (size_t i = 0; i < node->len; i++) {
-		YAML_Node *child = node->nodes[i];
+		YAML_Node *child = node->buf[i];
 		ProviderFacadeInstance provider = ProviderFacade_Null();
 
 		if (child->type == YAML_NodeType_Item) {
@@ -44,8 +44,8 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 		}
 
 		if (!ProviderFacade_IsNull(provider) && child->len > 0) {
-			for (size_t j = 0; j < child->nodes[0]->len; j++) {
-				YAML_Node *_child = child->nodes[0]->nodes[j];
+			for (size_t j = 0; j < child->buf[0]->len; j++) {
+				YAML_Node *_child = child->buf[0]->buf[j];
 
 				if (_child->type == YAML_NodeType_Item) {
 					String key   = YAML_Item(_child)->key;
@@ -68,10 +68,6 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 }
 
 def(void, Parse) {
-	YAML yml;
-	File file;
-	BufferedStream stream;
-
 	String path =
 		Storage_GetCfgPath(
 			Application_GetStorage(this->app));
@@ -83,12 +79,15 @@ def(void, Parse) {
 		goto out;
 	}
 
-	FileStream_Open(&file, path, FileStatus_ReadOnly);
+	File file;
+	File_Open(&file, path, FileStatus_ReadOnly);
 
-	BufferedStream_Init(&stream, &FileStream_Methods, &file);
+	BufferedStream stream;
+	BufferedStream_Init(&stream, &FileStreamImpl, &file);
 	BufferedStream_SetInputBuffer(&stream, 1024, 128);
 
-	YAML_Init(&yml, 4, &BufferedStream_Methods, &stream);
+	YAML yml;
+	YAML_Init(&yml, 4, &BufferedStreamImpl, &stream);
 	YAML_Parse(&yml);
 
 	call(ParseSubscriptions, YAML_GetRoot(&yml));
