@@ -17,10 +17,10 @@ def(void, Init, StorageInstance storage) {
 }
 
 def(void, Destroy) {
-	Array_Foreach(this->providers, ^(ProviderFacadeInstance *provider) {
+	foreach (provider, this->providers) {
 		ProviderFacade_Destroy(*provider);
 		ProviderFacade_Free(*provider);
-	});
+	}
 
 	Providers_Free(this->providers);
 }

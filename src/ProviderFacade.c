@@ -34,7 +34,10 @@ def(void, Destroy) {
 
 	String_Destroy(&this->name);
 
-	Array_Foreach(this->sources, String_Destroy);
+	foreach (source, this->sources) {
+		String_Destroy(source);
+	}
+
 	StringArray_Free(this->sources);
 }
 
