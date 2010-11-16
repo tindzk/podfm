@@ -53,7 +53,7 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 
 					if (String_Equals(key, $("limit"))) {
 						ProviderFacade_SetLimit(provider,
-							Integer_ParseString(value));
+							Int32_Parse(value));
 					} else if (String_Equals(key, $("date"))) {
 						ProviderFacade_SetInclDate(provider,
 							String_Equals(value, $("yes")));

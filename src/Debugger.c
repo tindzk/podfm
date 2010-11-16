@@ -22,7 +22,7 @@ static def(void, Init) {
 static def(void, OnLogMessage, String msg, Logger_Level level, String file, int line) {
 	String color  = $("black");
 	String slevel = Logger_ResolveLevel(level);
-	String sline  = Integer_ToString(line);
+	String sline  = Int32_ToString(line);
 
 	if (level == Logger_Level_Fatal || level == Logger_Level_Crit || level == Logger_Level_Error) {
 		color = $("red");

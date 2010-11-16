@@ -12,7 +12,7 @@
 
 class(self) {
 	String  name;
-	ssize_t limit;
+	s32     limit;
 	bool    inclDate;
 
 	Logger            *logger;
@@ -28,7 +28,7 @@ def(void, Init, StorageInstance storage, ProviderInterface *provider);
 def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);
-def(void, SetLimit, ssize_t limit);
+def(void, SetLimit, s32 limit);
 def(void, SetInclDate, bool value);
 def(void, AddSource, String source);
 def(void, Retrieve);

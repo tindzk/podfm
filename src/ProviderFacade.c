@@ -49,7 +49,7 @@ def(void, SetName, String name) {
 	String_Copy(&this->name, name);
 }
 
-def(void, SetLimit, ssize_t limit) {
+def(void, SetLimit, s32 limit) {
 	this->limit = limit;
 }
 
@@ -78,8 +78,8 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 		if (listing->buf[i].id.len == 0) {
 			Logger_Error(this->logger,
 				$("[%/%] The ID is empty!"),
-				Integer_ToString(i + 1),
-				Integer_ToString(listing->len));
+				Int32_ToString(i + 1),
+				Int32_ToString(listing->len));
 
 			call(DestroyPodcast, &listing->buf[i]);
 			continue;
@@ -87,8 +87,8 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 
 		Logger_Info(this->logger,
 			$("[%/%] Fetching podcast '%' (%)..."),
-			Integer_ToString(i + 1),
-			Integer_ToString(listing->len),
+			Int32_ToString(i + 1),
+			Int32_ToString(listing->len),
 			listing->buf[i].title,
 			listing->buf[i].id);
 
@@ -130,10 +130,10 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 			this->provider->getListing(this->instance, source, &listing);
 
 			Logger_Info(this->logger, $("% items found (limit=%)."),
-				Integer_ToString(listing->len),
+				Int32_ToString(listing->len),
 				(this->limit == -1)
 					? $("no")
-					: Integer_ToString(this->limit));
+					: Int32_ToString(this->limit));
 
 			call(Fetch, dl, cache, listing);
 		} clean finally {
