@@ -98,9 +98,8 @@ def(void, Get, Podcast podcast, String url) {
 	HTTP_Client_Init(&client, parts.host);
 
 	HTTP_Client_Events events;
-	events.onVersion = NULL;
-	events.onHeader  = (void *) ref(OnHeader);
-	events.context   = this;
+	events.onVersion = (HTTP_OnVersion) EmptyCallback();
+	events.onHeader  = (HTTP_OnHeader) Callback(this, ref(OnHeader));
 
 	HTTP_Client_SetEvents(&client, events);
 
