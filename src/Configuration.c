@@ -54,12 +54,14 @@ static def(void, ParseSubscriptions, YAML_Node *node) {
 					if (String_Equals(key, $("limit"))) {
 						ProviderFacade_SetLimit(provider,
 							Int32_Parse(value));
-					} else if (String_Equals(key, $("date"))) {
-						ProviderFacade_SetInclDate(provider,
-							String_Equals(value, $("yes")));
 					} else {
-						ProviderFacade_AddSource(provider,
-							YAML_Item(_child)->value);
+						bool handled = ProviderFacade_SetOption(
+							provider, key, value);
+
+						if (!handled) {
+							ProviderFacade_AddSource(provider,
+								YAML_Item(_child)->value);
+						}
 					}
 				}
 			}

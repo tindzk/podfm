@@ -12,17 +12,28 @@
 #define self Providers_RFI
 
 class(self) {
+	bool inclDate;
 	HTTP_Client client;
 };
 
 extern ExceptionManager exc;
 
 def(void, Init) {
+	this->inclDate = true;
 	HTTP_Client_Init(&this->client, $("www.rfi.fr"));
 }
 
 def(void, Destroy) {
 	HTTP_Client_Destroy(&this->client);
+}
+
+def(bool, SetOption, String key, String value) {
+	if (String_Equals(key, $("date"))) {
+		this->inclDate = String_Equals(value, $("yes"));
+		return true;
+	}
+
+	return false;
 }
 
 void ref(DestroyItem)(TranscribedPodcastItem *item) {
@@ -52,21 +63,21 @@ def(void, GetListing, String name, Listing **res) {
 	while ((pos = String_Between(buf, pos, $("<item>"), $("</item>"), &s)) != String_NotFound) {
 		Podcast item;
 
-		item.title = String_Between(s,
+		String title = String_Between(s,
 			$("<title>"),
 			$("</title>"));
 
-		if (String_Contains(item.title, $("Script journal"))) {
+		if (String_Contains(title, $("Script journal"))) {
 			continue;
 		}
 
-		ssize_t pos = String_Find(item.title, $(" - "));
+		ssize_t pos = String_Find(title, $(" - "));
 
 		if (pos != String_NotFound && pos > 2) {
-			item.title = String_Slice(item.title, 0, pos);
+			title = String_Slice(title, 0, pos);
 		}
 
-		item.title = String_Clone(String_Trim(item.title));
+		title = String_Trim(title);
 
 		item.id = String_Clone(String_Between(s,
 			$("<guid isPermaLink=\"false\">"),
@@ -79,6 +90,15 @@ def(void, GetListing, String name, Listing **res) {
 					$("</pubDate>")));
 
 		item.date = ((DateTime *) &date)->date;
+
+		item.title = HeapString(0);
+
+		if (this->inclDate) {
+			item.title = Utils_GetDate(item.date);
+			String_Append(&item.title, ' ');
+		}
+
+		String_Append(&item.title, title);
 
 		TranscribedPodcastItem *data = New(TranscribedPodcastItem);
 
@@ -212,6 +232,7 @@ ProviderInterface ref(ProviderImpl) = {
 	.init        = (void *) ref(Init),
 	.destroy     = (void *) ref(Destroy),
 	.destroyItem = (void *) ref(DestroyItem),
+	.setOption   = (void *) ref(SetOption),
 	.getListing  = (void *) ref(GetListing),
 	.fetch       = (void *) ref(Fetch)
 };

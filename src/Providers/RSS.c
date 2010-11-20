@@ -12,10 +12,23 @@
 #define self Providers_RSS
 
 class(self) {
-
+	bool inclDate;
 };
 
 extern ExceptionManager exc;
+
+def(void, Init) {
+	this->inclDate = true;
+}
+
+def(bool, SetOption, String key, String value) {
+	if (String_Equals(key, $("date"))) {
+		this->inclDate = String_Equals(value, $("yes"));
+		return true;
+	}
+
+	return false;
+}
 
 void ref(DestroyItem)(DefaultPodcastItem *item) {
 	String_Destroy(&item->podcast);
@@ -46,15 +59,6 @@ def(void, GetListing, String url, Listing **res) {
 	while ((pos = String_Between(buf, pos, $("<item>"), $("</item>"), &s)) != String_NotFound) {
 		Podcast item;
 
-		/* Title */
-		item.title =
-			HTML_Entities_Decode(
-				String_Between(s,
-					$("<title>"),
-					$("</title>")));
-
-		String_Trim(&item.title);
-
 		/* ID */
 		item.id = String_Between(s,
 			$("<guid"),
@@ -77,6 +81,26 @@ def(void, GetListing, String url, Listing **res) {
 
 		item.date = ((DateTime *) &date)->date;
 
+		/* Title */
+		item.title = HeapString(0);
+
+		if (this->inclDate) {
+			item.title = Utils_GetDate(item.date);
+			String_Append(&item.title, ' ');
+		}
+
+		String title =
+			HTML_Entities_Decode(
+				String_Between(s,
+					$("<title>"),
+					$("</title>")));
+
+		String_Trim(&title);
+
+		String_Append(&item.title, title);
+
+		String_Destroy(&title);
+
 		/* URL */
 		DefaultPodcastItem *data = New(DefaultPodcastItem);
 		data->podcast = String_Clone(String_Between(s, $("<enclosure url=\""), $("\"")));
@@ -97,9 +121,10 @@ def(void, Fetch, DownloaderInstance dl, Podcast item) {
 ProviderInterface ref(ProviderImpl) = {
 	.id          = $("rss"),
 	.size        = sizeof(self),
-	.init        = NULL,
+	.init        = (void *) ref(Init),
 	.destroy     = NULL,
 	.destroyItem = (void *) ref(DestroyItem),
+	.setOption   = (void *) ref(SetOption),
 	.getListing  = (void *) ref(GetListing),
 	.fetch       = (void *) ref(Fetch)
 };

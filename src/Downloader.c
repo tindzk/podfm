@@ -8,17 +8,12 @@ def(void, Init, StorageInstance storage, String providerId) {
 	this->logger     = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage    = storage;
 	this->providerId = String_Clone(providerId);
-	this->inclDate   = true;
 	this->location   = HeapString(0);
 }
 
 def(void, Destroy) {
 	String_Destroy(&this->providerId);
 	String_Destroy(&this->location);
-}
-
-def(void, SetInclDate, bool value) {
-	this->inclDate = value;
 }
 
 /* Try to auto-detect the extension. Fall back to MP3. */
@@ -51,18 +46,12 @@ static String ref(Sanitize)(String name) {
 
 static def(String, BuildPath, Podcast podcast, String ext) {
 	String title = ref(Sanitize)(podcast.title);
-	String date  = HeapString(0);
 	String path  = Storage_BuildPath(this->storage, this->providerId);
 
-	if (this->inclDate) {
-		date = Utils_GetDate(podcast.date);
-	}
-
-	String res = String_Format($("%/%%.%"),
-		path, date, title, ext);
+	String res = String_Format($("%/%.%"),
+		path, title, ext);
 
 	String_Destroy(&path);
-	String_Destroy(&date);
 	String_Destroy(&title);
 
 	return res;

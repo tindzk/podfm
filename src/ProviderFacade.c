@@ -8,7 +8,6 @@ def(void, Init, StorageInstance storage, ProviderInterface *provider) {
 	this->storage  = storage;
 	this->name     = String_Clone(provider->id);
 	this->limit    = -1;
-	this->inclDate = true;
 	this->sources  = StringArray_New(10);
 	this->provider = provider;
 
@@ -53,8 +52,13 @@ def(void, SetLimit, s32 limit) {
 	this->limit = limit;
 }
 
-def(void, SetInclDate, bool value) {
-	this->inclDate = value;
+def(bool, SetOption, String key, String value) {
+	if (this->provider->setOption != NULL) {
+		return this->provider->setOption(this->instance,
+			key, value);
+	}
+
+	return false;
 }
 
 def(void, AddSource, String source) {
@@ -145,7 +149,6 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 def(void, Retrieve) {
 	DownloaderInstance dl = Downloader_NewStack();
 	Downloader_Init(dl, this->storage, this->name);
-	Downloader_SetInclDate(dl, this->inclDate);
 
 	CacheInstance cache = Cache_NewStack();
 	Cache_Init(cache, this->storage, this->name);

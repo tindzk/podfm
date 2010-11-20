@@ -11,9 +11,8 @@
 #define self ProviderFacade
 
 class(self) {
-	String  name;
-	s32     limit;
-	bool    inclDate;
+	String name;
+	s32    limit;
 
 	Logger            *logger;
 	StringArray       *sources;
@@ -29,6 +28,6 @@ def(void, Destroy);
 def(String, GetName);
 def(void, SetName, String name);
 def(void, SetLimit, s32 limit);
-def(void, SetInclDate, bool value);
+def(bool, SetOption, String key, String value);
 def(void, AddSource, String source);
 def(void, Retrieve);
