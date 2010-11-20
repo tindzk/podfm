@@ -33,5 +33,5 @@ enum {
 def(void, Init, StorageInstance storage, String providerId);
 def(void, Destroy);
 def(void, SetInclDate, bool value);
-def(void, Get, Podcast podcast, String url);
-def(void, SaveText, Podcast podcast, String text);
+def(void, Get, String prefix, ListingItem *item, String url);
+def(void, SaveText, String prefix, ListingItem *item, String text);

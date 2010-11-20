@@ -65,27 +65,27 @@ def(void, AddSource, String source) {
 	Array_Push(this->sources, String_Clone(source));
 }
 
-static def(void, DestroyPodcast, Podcast *podcast) {
-	String_Destroy(&podcast->id);
-	String_Destroy(&podcast->title);
-	this->provider->destroyItem(podcast->data);
-	Memory_Free(podcast->data);
+static def(void, DestroyItem, ListingItem *item) {
+	String_Destroy(&item->id);
+	String_Destroy(&item->title);
+	this->provider->destroyItem(item);
+	Memory_Free(item);
 }
 
 static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *listing) {
 	for (size_t i = 0; i < listing->len; i++) {
 		if (this->limit >= 0 && i >= (size_t) this->limit) {
-			call(DestroyPodcast, &listing->buf[i]);
+			call(DestroyItem, listing->buf[i]);
 			continue;
 		}
 
-		if (listing->buf[i].id.len == 0) {
+		if (listing->buf[i]->id.len == 0) {
 			Logger_Error(this->logger,
 				$("[%/%] The ID is empty!"),
 				Int32_ToString(i + 1),
 				Int32_ToString(listing->len));
 
-			call(DestroyPodcast, &listing->buf[i]);
+			call(DestroyItem, listing->buf[i]);
 			continue;
 		}
 
@@ -93,14 +93,14 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 			$("[%/%] Fetching podcast '%' (%)..."),
 			Int32_ToString(i + 1),
 			Int32_ToString(listing->len),
-			listing->buf[i].title,
-			listing->buf[i].id);
+			listing->buf[i]->title,
+			listing->buf[i]->id);
 
-		if (Cache_Has(cache, listing->buf[i].id)) {
+		if (Cache_Has(cache, listing->buf[i]->id)) {
 			Logger_Info(this->logger,
 				$("Already in cache. Skipping..."));
 
-			call(DestroyPodcast, &listing->buf[i]);
+			call(DestroyItem, listing->buf[i]);
 			continue;
 		}
 
@@ -108,15 +108,15 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 			this->provider->fetch(this->instance, dl,
 				listing->buf[i]);
 
-			Cache_Add(cache, listing->buf[i].id);
+			Cache_Add(cache, listing->buf[i]->id);
 		} clean catchAny {
 			for (size_t j = i + 1; j < listing->len; j++) {
-				call(DestroyPodcast, &listing->buf[j]);
+				call(DestroyItem, listing->buf[j]);
 			}
 
 			__exc_rethrow = true;
 		} finally {
-			call(DestroyPodcast, &listing->buf[i]);
+			call(DestroyItem, listing->buf[i]);
 		} tryEnd;
 	}
 }

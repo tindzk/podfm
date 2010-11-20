@@ -27,7 +27,7 @@ static String ref(GetMediaExtension)(String path) {
 	}
 }
 
-static String ref(Sanitize)(String name) {
+static sdef(String, Sanitize, String name) {
 	String out = String_Clone(name);
 
 	String_ReplaceAll(&out, $("?"),  $(" "));
@@ -44,12 +44,14 @@ static String ref(Sanitize)(String name) {
 	return out;
 }
 
-static def(String, BuildPath, Podcast podcast, String ext) {
-	String title = ref(Sanitize)(podcast.title);
+static def(String, BuildPath, String prefix, ListingItem *item, String ext) {
+	String title = scall(Sanitize, item->title);
 	String path  = Storage_BuildPath(this->storage, this->providerId);
 
-	String res = String_Format($("%/%.%"),
-		path, title, ext);
+	String res = String_Format($("%/%%%.%"),
+		path,
+		prefix, (prefix.len > 0) ? $(" ") : $(""),
+		title, ext);
 
 	String_Destroy(&path);
 	String_Destroy(&title);
@@ -63,7 +65,7 @@ static def(void, OnHeader, String name, String value) {
 	}
 }
 
-def(void, Get, Podcast podcast, String url) {
+def(void, Get, String prefix, ListingItem *item, String url) {
 	this->location.len = 0;
 
 	HTTP_Client client;
@@ -100,13 +102,13 @@ def(void, Get, Podcast podcast, String url) {
 
 		Logger_Debug(this->logger, $("Redirecting..."));
 
-		call(Get, podcast, this->location);
+		call(Get, prefix, item, this->location);
 
 		goto out;
 	}
 
-	String full = call(BuildPath, podcast,
-		ref(GetMediaExtension)(parts.path));
+	String full = call(BuildPath, prefix, item,
+		scall(GetMediaExtension, parts.path));
 
 	Logger_Debug(this->logger, $("Destination: %"), full);
 
@@ -182,10 +184,10 @@ out:
 	}
 }
 
-def(void, SaveText, Podcast podcast, String text) {
+def(void, SaveText, String prefix, ListingItem *item, String text) {
 	File file;
 
-	String path = call(BuildPath, podcast, $("txt"));
+	String path = call(BuildPath, prefix, item, $("txt"));
 
 	File_Open(&file, path,
 			FileStatus_Create   |

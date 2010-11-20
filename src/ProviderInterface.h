@@ -12,5 +12,5 @@ record(ProviderInterface) {
 	void (*destroyItem)(void *item);
 	bool (*setOption)  (GenericInstance this, String key, String value);
 	void (*getListing) (GenericInstance this, String name, Listing **res);
-	void (*fetch)      (GenericInstance this, DownloaderInstance dl, Podcast item);
+	void (*fetch)      (GenericInstance this, DownloaderInstance dl, ListingItem *item);
 };

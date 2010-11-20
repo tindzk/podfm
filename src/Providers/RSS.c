@@ -30,7 +30,7 @@ def(bool, SetOption, String key, String value) {
 	return false;
 }
 
-void ref(DestroyItem)(DefaultPodcastItem *item) {
+sdef(void, DestroyItem, DefaultPodcastItem *item) {
 	String_Destroy(&item->podcast);
 }
 
@@ -52,43 +52,29 @@ def(void, GetListing, String url, Listing **res) {
 		HTTP_Client_Destroy(&client);
 	} tryEnd;
 
-
 	String s;
 	ssize_t pos = 0;
 
 	while ((pos = String_Between(buf, pos, $("<item>"), $("</item>"), &s)) != String_NotFound) {
-		Podcast item;
-
-		/* ID */
-		item.id = String_Between(s,
-			$("<guid"),
-			$("</guid>"));
-
-		ssize_t del = String_Find(item.id, $(">"));
-
-		if (del != String_NotFound) {
-			item.id = String_Slice(item.id, del + 1);
-		}
-
-		item.id = String_Clone(item.id);
-
 		/* Date */
-		Date_RFC822 date =
+		Date_RFC822 rfcDate =
 			Date_RFC822_Parse(
 				String_Between(s,
 					$("<pubDate>"),
 					$("</pubDate>")));
 
-		item.date = ((DateTime *) &date)->date;
+		/* ID */
+		String id = String_Between(s,
+			$("<guid"),
+			$("</guid>"));
 
-		/* Title */
-		item.title = HeapString(0);
+		ssize_t del = String_Find(id, $(">"));
 
-		if (this->inclDate) {
-			item.title = Utils_GetDate(item.date);
-			String_Append(&item.title, ' ');
+		if (del != String_NotFound) {
+			id = String_Slice(id, del + 1);
 		}
 
+		/* Title */
 		String title =
 			HTML_Entities_Decode(
 				String_Between(s,
@@ -97,25 +83,39 @@ def(void, GetListing, String url, Listing **res) {
 
 		String_Trim(&title);
 
-		String_Append(&item.title, title);
+		DefaultPodcastItem *item = New(DefaultPodcastItem);
 
-		String_Destroy(&title);
+		item->base = (ListingItem) {
+			.id    = String_Clone(id),
+			.title = title
+		};
 
-		/* URL */
-		DefaultPodcastItem *data = New(DefaultPodcastItem);
-		data->podcast = String_Clone(String_Between(s, $("<enclosure url=\""), $("\"")));
-		item.data = data;
+		item->date    = rfcDate.date;
+		item->podcast = String_Clone(
+				String_Between(s,
+					$("<enclosure url=\""),
+					$("\"")));
 
-		Listing_Push(res, item);
+		Listing_Push(res, (ListingItem *) item);
 	}
 
 	String_Destroy(&buf);
 }
 
-def(void, Fetch, DownloaderInstance dl, Podcast item) {
-	DefaultPodcastItem *data = item.data;
+def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
+	DefaultPodcastItem *data = (DefaultPodcastItem *) item;
 
-	Downloader_Get(dl, item, data->podcast);
+	String prefix = HeapString(0);
+
+	if (this->inclDate) {
+		prefix = Utils_GetDate(data->date);
+	}
+
+	try (&exc) {
+		Downloader_Get(dl, prefix, item, data->podcast);
+	} clean finally {
+		String_Destroy(&prefix);
+	} tryEnd;
 }
 
 ProviderInterface ref(ProviderImpl) = {

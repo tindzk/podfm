@@ -2,23 +2,26 @@
 #import <Array.h>
 #import <String.h>
 
-class(Podcast) {
+record(ListingItem) {
 	String id;
 	String title;
-	Date date;
-
-	void *data;
 };
 
-Array_Define(Podcast, Listing);
+Array_Define(ListingItem *, Listing);
 
 // ---
 
 record(DefaultPodcastItem) {
+	ListingItem base;
+
+	Date date;
 	String podcast;    /* Podcast URL */
 };
 
 record(TranscribedPodcastItem) {
+	ListingItem base;
+
+	Date date;
 	String podcast;    /* Podcast URL */
 	String transcript; /* Transcript URL */
 };

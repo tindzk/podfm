@@ -36,7 +36,7 @@ def(bool, SetOption, String key, String value) {
 	return false;
 }
 
-void ref(DestroyItem)(TranscribedPodcastItem *item) {
+sdef(void, DestroyItem, TranscribedPodcastItem *item) {
 	String_Destroy(&item->podcast);
 	String_Destroy(&item->transcript);
 }
@@ -61,8 +61,6 @@ def(void, GetListing, String name, Listing **res) {
 	ssize_t pos = 0;
 
 	while ((pos = String_Between(buf, pos, $("<item>"), $("</item>"), &s)) != String_NotFound) {
-		Podcast item;
-
 		String title = String_Between(s,
 			$("<title>"),
 			$("</title>"));
@@ -79,51 +77,55 @@ def(void, GetListing, String name, Listing **res) {
 
 		title = String_Trim(title);
 
-		item.id = String_Clone(String_Between(s,
+		String id = String_Between(s,
 			$("<guid isPermaLink=\"false\">"),
-			$("</guid>")));
+			$("</guid>"));
 
-		Date_RFC822 date =
+		Date_RFC822 rfcDate =
 			Date_RFC822_Parse(
 				String_Between(s,
 					$("<pubDate>"),
 					$("</pubDate>")));
 
-		item.date = ((DateTime *) &date)->date;
+		TranscribedPodcastItem *item = New(TranscribedPodcastItem);
 
-		item.title = HeapString(0);
+		item->base = (ListingItem) {
+			.id    = String_Clone(id),
+			.title = title
+		};
 
-		if (this->inclDate) {
-			item.title = Utils_GetDate(item.date);
-			String_Append(&item.title, ' ');
-		}
+		item->date    = rfcDate.date;
+		item->podcast = String_Clone(
+			String_Between(s,
+				$("<enclosure url=\""),
+				$("\"")));
 
-		String_Append(&item.title, title);
-
-		TranscribedPodcastItem *data = New(TranscribedPodcastItem);
-
-		data->podcast = String_Clone(String_Between(s, $("<enclosure url=\""), $("\"")));
-
-		String link = String_Between(s, $("<link>"), $("</link>"));
+		String link = String_Between(s,
+			$("<link>"),
+			$("</link>"));
 
 		if (String_Contains(link, $("questionnaires"))) {
-			data->transcript = $("");
+			item->transcript = $("");
 		} else {
-			data->transcript = String_Clone(link);
+			item->transcript = String_Clone(link);
 		}
 
-		item.data = data;
-
-		Listing_Push(res, item);
+		Listing_Push(res, (ListingItem *) item);
 	}
 
 	String_Destroy(&buf);
 }
 
-def(void, Fetch, DownloaderInstance dl, Podcast item) {
-	TranscribedPodcastItem *data = item.data;
+def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
+	TranscribedPodcastItem *data = (TranscribedPodcastItem *) item;
 
-	Downloader_Get(dl, item, data->podcast);
+	String prefix = HeapString(0);
+
+	if (this->inclDate) {
+		prefix = Utils_GetDate(data->date);
+	}
+
+	Downloader_Get(dl, prefix, item, data->podcast);
 
 	if (data->transcript.len > 0) {
 		if (!HTTP_Client_IsConnected(&this->client)) {
@@ -217,13 +219,15 @@ def(void, Fetch, DownloaderInstance dl, Podcast item) {
 		}
 
 		if (transcript.len > 128) {
-			Downloader_SaveText(dl, item, transcript);
+			Downloader_SaveText(dl, prefix, item, transcript);
 		}
 
 		String_Destroy(&transcript);
 
 		String_Destroy(&resp);
 	}
+
+	String_Destroy(&prefix);
 }
 
 ProviderInterface ref(ProviderImpl) = {
