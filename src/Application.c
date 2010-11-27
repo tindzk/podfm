@@ -1,8 +1,6 @@
 #import "Application.h"
 #import <App.h>
 
-extern ExceptionManager exc;
-
 static ProviderInterface* providers[] = {
 	/* French */
 	&Providers_RFI_ProviderImpl,
@@ -60,7 +58,7 @@ def(void, Retrieve) {
 		Logger_Info(logger, $("Processing provider '%'..."),
 			ProviderFacade_GetName(provider));
 
-		try (&exc) {
+		try {
 			ProviderFacade_Retrieve(provider);
 		} clean catch(Downloader, excDownloadFailed) {
 			Logger_Error(logger, $("Writing failed. Disk full?"));

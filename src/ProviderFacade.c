@@ -104,7 +104,7 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 			continue;
 		}
 
-		try (&exc) {
+		try {
 			this->provider->fetch(this->instance, dl,
 				listing->buf[i]);
 
@@ -130,7 +130,7 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 
 		Listing *listing = Listing_New(128);
 
-		try (&exc) {
+		try {
 			this->provider->getListing(this->instance, source, &listing);
 
 			Logger_Info(this->logger, $("% items found (limit=%)."),
@@ -153,7 +153,7 @@ def(void, Retrieve) {
 	CacheInstance cache = Cache_NewStack();
 	Cache_Init(cache, this->storage, this->name);
 
-	try (&exc) {
+	try {
 		call(Request, dl, cache);
 	} clean finally {
 		Downloader_Destroy(dl);

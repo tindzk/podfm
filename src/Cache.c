@@ -1,12 +1,6 @@
 #import "Cache.h"
 #import <App.h>
 
-static ExceptionManager *exc;
-
-void Cache0(ExceptionManager *e) {
-	exc = e;
-}
-
 def(void, Init, StorageInstance storage, String provider) {
 	String path = Storage_GetCachePath(storage, provider);
 
@@ -27,7 +21,7 @@ def(void, Init, StorageInstance storage, String provider) {
 		Logger_Fatal(logger,
 			$("The index file is too large. Remove all unneeded lines."));
 
-		throw(exc, excIndexFileTooLarge);
+		throw(excIndexFileTooLarge);
 	}
 
 	this->items = String_Split(s, '\n');

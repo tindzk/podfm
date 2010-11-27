@@ -42,7 +42,7 @@ def(void, GetListing, String url, Listing **res) {
 
 	String buf;
 
-	try (&exc) {
+	try {
 		HTTP_Client_Open(&client, parts.host);
 		HTTP_Client_Request(&client, parts.path);
 		HTTP_Client_FetchResponse(&client);
@@ -111,7 +111,7 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 		prefix = Utils_GetDate(data->date);
 	}
 
-	try (&exc) {
+	try {
 		Downloader_Get(dl, prefix, item, data->podcast);
 	} clean finally {
 		String_Destroy(&prefix);

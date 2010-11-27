@@ -44,7 +44,7 @@ sdef(void, DestroyItem, TranscribedPodcastItem *item) {
 def(void, GetListing, String name, Listing **res) {
 	String path = String_Format($("/radiofr/podcast/%.xml"), name);
 
-	try (&exc) {
+	try {
 		if (!HTTP_Client_IsConnected(&this->client)) {
 			HTTP_Client_Open(&this->client);
 		}
@@ -134,7 +134,7 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 
 		URL_Parts parts = URL_Parse(data->transcript);
 
-		try (&exc) {
+		try {
 			HTTP_Client_Request(&this->client, parts.host, parts.path);
 			HTTP_Client_FetchResponse(&this->client);
 		} clean finally {

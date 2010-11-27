@@ -20,8 +20,6 @@ class(self) {
 
 ExtendClass(self);
 
-void Cache0(ExceptionManager *e);
-
 def(void, Init, StorageInstance storage, String provider);
 def(void, Destroy);
 def(bool, Has, String id);

@@ -136,7 +136,7 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 	while (HTTP_Client_Read(&client, &buf)) {
 		got += buf.len;
 
-		try (&exc) {
+		try {
 			BufferedStream_Write(&output, buf.buf, buf.len);
 		} clean catch(File, excWritingFailed) {
 			error = true;
@@ -180,7 +180,7 @@ out:
 	HTTP_Client_Destroy(&client);
 
 	if (error) {
-		throw(&exc, excDownloadFailed);
+		throw(excDownloadFailed);
 	}
 }
 

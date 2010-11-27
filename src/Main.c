@@ -20,22 +20,7 @@ ExceptionManager exc;
 Terminal term;
 
 int main(int argc, char *argv[]) {
-	ExceptionManager_Init(&exc);
-
-	Path0(&exc);
-	YAML0(&exc);
-	File0(&exc);
-	Signal0(&exc);
-	Memory0(&exc);
-	Socket0(&exc);
-	String0(&exc);
-	Integer0(&exc);
-	HTTP_Header0(&exc);
-	HTTP_Client0(&exc);
-	NetworkAddress0(&exc);
-	SocketConnection0(&exc);
-
-	Cache0(&exc);
+	Signal0();
 
 	Terminal_Init(&term, File_StdIn, File_StdOut, true);
 	Terminal_Configure(&term, false, true);
@@ -50,14 +35,14 @@ int main(int argc, char *argv[]) {
 	Application app;
 	Application_Init(&app, &storage);
 
-	try (&exc) {
+	try {
 		Configuration cfg;
 		Configuration_Init(&cfg, &app);
 		Configuration_Parse(&cfg);
 
 		Application_Retrieve(&app);
 	} clean catchAny {
-		ExceptionManager_Print(&exc, e);
+		Exception_Print(e);
 
 #if Exception_SaveTrace
 		Backtrace_PrintTrace(exc.e.trace, exc.e.traceItems);
