@@ -1,5 +1,4 @@
 #import "ProviderFacade.h"
-#import <App.h>
 
 extern ExceptionManager exc;
 

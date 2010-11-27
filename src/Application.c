@@ -1,5 +1,4 @@
 #import "Application.h"
-#import <App.h>
 
 static ProviderInterface* providers[] = {
 	/* French */

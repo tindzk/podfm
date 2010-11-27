@@ -1,5 +1,4 @@
 #import "Debugger.h"
-#import <App.h>
 
 extern Terminal term;
 

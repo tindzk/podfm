@@ -1,5 +1,4 @@
 #import "Storage.h"
-#import <App.h>
 
 def(void, Init, String base) {
 	this->base = String_Clone(base);

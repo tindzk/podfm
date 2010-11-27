@@ -6,8 +6,6 @@
 
 #import "../ProviderInterface.h"
 
-#import <App.h>
-
 #undef self
 #define self Providers_RSS
 

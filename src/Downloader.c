@@ -1,5 +1,4 @@
 #import "Downloader.h"
-#import <App.h>
 
 extern Terminal term;
 extern ExceptionManager exc;

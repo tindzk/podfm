@@ -1,5 +1,4 @@
 #import "Configuration.h"
-#import <App.h>
 
 def(void, Init, ApplicationInstance app) {
 	this->app    = app;
