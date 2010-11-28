@@ -194,7 +194,7 @@ def(void, SaveText, String prefix, ListingItem *item, String text) {
 
 	String_Destroy(&path);
 
-	File_Write(File_FromObject(&file), text);
+	File_Write(&file, text);
 
 	File_Close(&file);
 
