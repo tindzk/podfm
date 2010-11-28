@@ -114,7 +114,7 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 	} tryEnd;
 }
 
-Impl(Provider) = {
+ImplEx(Provider) = {
 	.id          = $("rss"),
 	.size        = sizeof(self),
 	.init        = (void *) ref(Init),

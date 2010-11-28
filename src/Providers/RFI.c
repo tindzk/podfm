@@ -226,7 +226,7 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 	String_Destroy(&prefix);
 }
 
-Impl(Provider) = {
+ImplEx(Provider) = {
 	.id          = $("rfi"),
 	.size        = sizeof(self),
 	.init        = (void *) ref(Init),
