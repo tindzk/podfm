@@ -9,12 +9,10 @@
 #undef self
 #define self Providers_RFI
 
-class(self) {
+class {
 	bool inclDate;
 	HTTP_Client client;
 };
-
-extern ExceptionManager exc;
 
 def(void, Init) {
 	this->inclDate = true;
@@ -228,7 +226,7 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 	String_Destroy(&prefix);
 }
 
-ProviderInterface ref(ProviderImpl) = {
+Impl(Provider) = {
 	.id          = $("rfi"),
 	.size        = sizeof(self),
 	.init        = (void *) ref(Init),

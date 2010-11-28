@@ -16,15 +16,13 @@
 #undef self
 #define self Downloader
 
-class(self) {
+class {
 	StorageInstance storage;
 	Logger  *logger;
 	String  providerId;
 	bool    inclDate;
 	String  location;
 };
-
-ExtendClass(self);
 
 enum {
 	excDownloadFailed = excOffset

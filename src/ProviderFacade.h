@@ -10,7 +10,7 @@
 #undef self
 #define self ProviderFacade
 
-class(self) {
+class {
 	String name;
 	s32    limit;
 
@@ -21,7 +21,7 @@ class(self) {
 	StorageInstance   storage;
 };
 
-ExtendClass(self);
+ExtendClass;
 
 def(void, Init, StorageInstance storage, ProviderInterface *provider);
 def(void, Destroy);

@@ -1,7 +1,6 @@
 #import "Downloader.h"
 
 extern Terminal term;
-extern ExceptionManager exc;
 
 def(void, Init, StorageInstance storage, String providerId) {
 	this->logger     = Debugger_GetLogger(Debugger_GetInstance());

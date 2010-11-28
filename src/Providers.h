@@ -1,4 +1,4 @@
 #import "ProviderInterface.h"
 
-ProviderInterface Providers_RSS_ProviderImpl;
-ProviderInterface Providers_RFI_ProviderImpl;
+extern ProviderInterface Providers_RSSImpl;
+extern ProviderInterface Providers_RFIImpl;

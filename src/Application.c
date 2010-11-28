@@ -2,10 +2,10 @@
 
 static ProviderInterface* providers[] = {
 	/* French */
-	&Providers_RFI_ProviderImpl,
+	&Providers_RFIImpl,
 
 	/* General */
-	&Providers_RSS_ProviderImpl
+	&Providers_RSSImpl
 };
 
 def(void, Init, StorageInstance storage) {

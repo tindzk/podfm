@@ -9,11 +9,9 @@
 #undef self
 #define self Providers_RSS
 
-class(self) {
+class {
 	bool inclDate;
 };
-
-extern ExceptionManager exc;
 
 def(void, Init) {
 	this->inclDate = true;
@@ -116,7 +114,7 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 	} tryEnd;
 }
 
-ProviderInterface ref(ProviderImpl) = {
+Impl(Provider) = {
 	.id          = $("rss"),
 	.size        = sizeof(self),
 	.init        = (void *) ref(Init),

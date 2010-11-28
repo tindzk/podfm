@@ -1,7 +1,5 @@
 #import "ProviderFacade.h"
 
-extern ExceptionManager exc;
-
 def(void, Init, StorageInstance storage, ProviderInterface *provider) {
 	this->logger   = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage  = storage;
@@ -146,16 +144,16 @@ static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
 }
 
 def(void, Retrieve) {
-	DownloaderInstance dl = Downloader_NewStack();
-	Downloader_Init(dl, this->storage, this->name);
+	Downloader dl;
+	Downloader_Init(&dl, this->storage, this->name);
 
-	CacheInstance cache = Cache_NewStack();
-	Cache_Init(cache, this->storage, this->name);
+	Cache cache;
+	Cache_Init(&cache, this->storage, this->name);
 
 	try {
-		call(Request, dl, cache);
+		call(Request, &dl, &cache);
 	} clean finally {
-		Downloader_Destroy(dl);
-		Cache_Destroy(cache);
+		Downloader_Destroy(&dl);
+		Cache_Destroy(&cache);
 	} tryEnd;
 }

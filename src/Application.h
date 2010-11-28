@@ -12,12 +12,10 @@
 
 Array_Define(ProviderFacadeInstance, Providers);
 
-class(self) {
+class {
 	StorageInstance storage;
 	Providers *providers;
 };
-
-ExtendClass(self);
 
 def(void, Init, StorageInstance storage);
 def(void, Destroy);

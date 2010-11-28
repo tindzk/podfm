@@ -3,7 +3,7 @@
 #import "Podcast.h"
 #import "Downloader.h"
 
-record(ProviderInterface) {
+Interface(Provider) {
 	String id;
 	size_t size;
 

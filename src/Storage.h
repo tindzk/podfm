@@ -4,11 +4,9 @@
 #undef self
 #define self Storage
 
-class(self) {
+class {
 	String base;
 };
-
-ExtendClass(self);
 
 def(void, Init, String base);
 def(void, Destroy);

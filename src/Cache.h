@@ -13,12 +13,10 @@ enum {
 	excIndexFileTooLarge = excOffset
 };
 
-class(self) {
+class {
 	File file;
 	StringArray *items;
 };
-
-ExtendClass(self);
 
 def(void, Init, StorageInstance storage, String provider);
 def(void, Destroy);
