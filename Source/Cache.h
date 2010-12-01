@@ -6,7 +6,6 @@
 #import "Storage.h"
 #import "Debugger.h"
 
-#undef self
 #define self Cache
 
 enum {
@@ -22,3 +21,5 @@ def(void, Init, StorageInstance storage, String provider);
 def(void, Destroy);
 def(bool, Has, String id);
 def(void, Add, String id);
+
+#undef self

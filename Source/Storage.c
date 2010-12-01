@@ -1,5 +1,7 @@
 #import "Storage.h"
 
+#define self Storage
+
 def(void, Init, String base) {
 	this->base = String_Clone(base);
 }

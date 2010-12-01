@@ -8,7 +8,6 @@
 #import "Debugger.h"
 #import "Application.h"
 
-#undef self
 #define self Configuration
 
 class {
@@ -18,3 +17,5 @@ class {
 
 def(void, Init, ApplicationInstance app);
 def(void, Parse);
+
+#undef self

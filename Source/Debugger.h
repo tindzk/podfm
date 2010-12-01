@@ -3,7 +3,6 @@
 #import <Terminal.h>
 #import <Terminal/Controller.h>
 
-#undef self
 #define self Debugger
 
 class {
@@ -12,3 +11,5 @@ class {
 
 def(Logger *, GetLogger);
 SingletonPrototype(self);
+
+#undef self

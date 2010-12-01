@@ -1,5 +1,7 @@
 #import "Configuration.h"
 
+#define self Configuration
+
 def(void, Init, ApplicationInstance app) {
 	this->app    = app;
 	this->logger = Debugger_GetLogger(Debugger_GetInstance());

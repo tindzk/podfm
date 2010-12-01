@@ -7,7 +7,6 @@
 #import "Downloader.h"
 #import "ProviderInterface.h"
 
-#undef self
 #define self ProviderFacade
 
 class {
@@ -31,3 +30,5 @@ def(void, SetLimit, s32 limit);
 def(bool, SetOption, String key, String value);
 def(void, AddSource, String source);
 def(void, Retrieve);
+
+#undef self

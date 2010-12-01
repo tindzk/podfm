@@ -7,7 +7,6 @@
 #import "Providers.h"
 #import "ProviderFacade.h"
 
-#undef self
 #define self Application
 
 Array_Define(ProviderFacadeInstance, Providers);
@@ -22,3 +21,5 @@ def(void, Destroy);
 def(StorageInstance, GetStorage);
 def(ProviderFacadeInstance, AddProvider, String id);
 def(void, Retrieve);
+
+#undef self

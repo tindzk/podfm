@@ -1,5 +1,7 @@
 #import "ProviderFacade.h"
 
+#define self ProviderFacade
+
 def(void, Init, StorageInstance storage, ProviderInterface *provider) {
 	this->logger   = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage  = storage;

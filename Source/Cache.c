@@ -1,5 +1,7 @@
 #import "Cache.h"
 
+#define self Cache
+
 def(void, Init, StorageInstance storage, String provider) {
 	String path = Storage_GetCachePath(storage, provider);
 

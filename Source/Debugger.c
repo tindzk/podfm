@@ -1,5 +1,7 @@
 #import "Debugger.h"
 
+#define self Debugger
+
 extern Terminal term;
 
 static def(void, Init);

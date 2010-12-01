@@ -13,7 +13,6 @@
 #import "Storage.h"
 #import "Debugger.h"
 
-#undef self
 #define self Downloader
 
 class {
@@ -33,3 +32,5 @@ def(void, Destroy);
 def(void, SetInclDate, bool value);
 def(void, Get, String prefix, ListingItem *item, String url);
 def(void, SaveText, String prefix, ListingItem *item, String text);
+
+#undef self

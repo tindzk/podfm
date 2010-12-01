@@ -1,5 +1,7 @@
 #import "Utils.h"
 
+#define self Utils
+
 sdef(String, GetDate, Date date) {
 	String year  = Number_Format(date.year,  4);
 	String month = Number_Format(date.month, 2);

@@ -1,5 +1,7 @@
 #import "Application.h"
 
+#define self Application
+
 static ProviderInterface* providers[] = {
 	/* French */
 	&Providers_RFI_ProviderImpl,

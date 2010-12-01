@@ -1,5 +1,7 @@
 #import "Downloader.h"
 
+#define self Downloader
+
 extern Terminal term;
 
 def(void, Init, StorageInstance storage, String providerId) {
