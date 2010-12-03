@@ -61,7 +61,7 @@ def(bool, SetOption, String key, String value) {
 }
 
 def(void, AddSource, String source) {
-	Array_Push(this->sources, String_Clone(source));
+	StringArray_Push(&this->sources, String_Clone(source));
 }
 
 static def(void, DestroyItem, ListingItem *item) {

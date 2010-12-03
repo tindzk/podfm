@@ -7,7 +7,7 @@ record(ListingItem) {
 	String title;
 };
 
-Array_Define(ListingItem *, Listing);
+Array(ListingItem *, Listing);
 
 // ---
 

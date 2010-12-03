@@ -9,7 +9,7 @@
 
 #define self Application
 
-Array_Define(ProviderFacadeInstance, Providers);
+Array(ProviderFacadeInstance, Providers);
 
 class {
 	StorageInstance storage;
