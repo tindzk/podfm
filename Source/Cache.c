@@ -22,7 +22,7 @@ def(void, Init, StorageInstance storage, String provider) {
 		Logger_Fatal(logger,
 			$("The index file is too large. Remove all unneeded lines."));
 
-		throw(excIndexFileTooLarge);
+		throw(IndexFileTooLarge);
 	}
 
 	this->items = String_Split(s, '\n');

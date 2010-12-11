@@ -23,9 +23,7 @@ class {
 	String  location;
 };
 
-enum {
-	excDownloadFailed = excOffset
-};
+// @exc DownloadFailed
 
 def(void, Init, StorageInstance storage, String providerId);
 def(void, Destroy);

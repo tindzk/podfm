@@ -8,9 +8,7 @@
 
 #define self Cache
 
-enum {
-	excIndexFileTooLarge = excOffset
-};
+// @exc IndexFileTooLarge
 
 class {
 	File file;

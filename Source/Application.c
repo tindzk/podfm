@@ -61,7 +61,7 @@ def(void, Retrieve) {
 
 		try {
 			ProviderFacade_Retrieve(provider);
-		} clean catch(Downloader, excDownloadFailed) {
+		} clean catch(Downloader, DownloadFailed) {
 			Logger_Error(logger, $("Writing failed. Disk full?"));
 			excBreak;
 		} finally {

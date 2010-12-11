@@ -138,7 +138,7 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 
 		try {
 			BufferedStream_Write(&output, buf.buf, buf.len);
-		} clean catch(File, excWritingFailed) {
+		} clean catch(File, WritingFailed) {
 			error = true;
 			excBreak;
 		} finally {
@@ -180,7 +180,7 @@ out:
 	HTTP_Client_Destroy(&client);
 
 	if (error) {
-		throw(excDownloadFailed);
+		throw(DownloadFailed);
 	}
 }
 
