@@ -121,7 +121,7 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 	String_Destroy(&full);
 
 	BufferedStream output;
-	BufferedStream_Init(&output, &FileStreamImpl, &file);
+	BufferedStream_Init(&output, File_AsStream(&file));
 	BufferedStream_SetOutputBuffer(&output, 128 * 1024);
 
 	uint64_t got  = 0;

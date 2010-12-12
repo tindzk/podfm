@@ -1,4 +1,4 @@
 #import "ProviderInterface.h"
 
-extern ProviderInterface Providers_RSS_ProviderImpl;
-extern ProviderInterface Providers_RFI_ProviderImpl;
+ExportAnonImplEx(Providers_RSS, Provider);
+ExportAnonImplEx(Providers_RFI, Provider);
