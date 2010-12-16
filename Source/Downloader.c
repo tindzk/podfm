@@ -124,8 +124,9 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 	BufferedStream_Init(&output, File_AsStream(&file));
 	BufferedStream_SetOutputBuffer(&output, 128 * 1024);
 
-	uint64_t got  = 0;
-	int64_t total = HTTP_Client_GetLength(&client);
+	u64 got   = 0;
+	s64 total = HTTP_Client_GetLength(&client);
+
 	size_t prevPercent = 100;
 
 	String buf = HeapString(HTTP_Client_ReadChunkSize);
