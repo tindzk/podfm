@@ -44,7 +44,10 @@ def(void, GetListing, String name, Listing **res) {
 			HTTP_Client_Open(&this->client);
 		}
 
-		HTTP_Client_Request(&this->client, $("www.rfi.fr"), path);
+		HTTP_Client_Request(&this->client,
+			HTTP_Client_CreateRequest(
+				$("www.rfi.fr"), path));
+
 		HTTP_Client_FetchResponse(&this->client);
 	} clean finally {
 		String_Destroy(&path);
@@ -130,7 +133,10 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 		URL_Parts parts = URL_Parse(data->transcript);
 
 		try {
-			HTTP_Client_Request(&this->client, parts.host, parts.path);
+			HTTP_Client_Request(&this->client,
+				HTTP_Client_CreateRequest(
+					parts.host, parts.path));
+
 			HTTP_Client_FetchResponse(&this->client);
 		} clean finally {
 			URL_Parts_Destroy(&parts);

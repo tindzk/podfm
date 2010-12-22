@@ -15,4 +15,5 @@ mkdir -p Build/{podfm,Jivai}
 	dbgsym=yes                   \
 	add=Source/Providers/*.c     \
 	link=@bfd                    \
+	link=@dl                     \
 	link=@m

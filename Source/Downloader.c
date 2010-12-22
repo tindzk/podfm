@@ -80,7 +80,10 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 
 	HTTP_Client_SetEvents(&client, events);
 
-	HTTP_Client_Request(&client, parts.path);
+	HTTP_Client_Request(&client,
+		HTTP_Client_CreateRequest(
+			parts.host,
+			parts.path));
 
 	Logger_Debug(this->logger, $("URL: %"), url);
 
@@ -154,8 +157,8 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 
 			String msg = String_Format(
 				$("Received % MiB of % MiB"),
-				Float_ToString(gotmb,   0.01),
-				Float_ToString(totalmb, 0.01));
+				Float_ToString(gotmb,   0.01, '.'),
+				Float_ToString(totalmb, 0.01, '.'));
 
 			Terminal_ProgressBar_Render(&pbar, percent, msg);
 

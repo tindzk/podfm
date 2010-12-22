@@ -39,7 +39,11 @@ def(void, GetListing, String url, Listing **res) {
 
 	try {
 		HTTP_Client_Open(&client, parts.host);
-		HTTP_Client_Request(&client, parts.path);
+
+		HTTP_Client_Request(&client,
+			HTTP_Client_CreateRequest(
+				parts.host, parts.path));
+
 		HTTP_Client_FetchResponse(&client);
 		buf = HTTP_Client_Read(&client, 50 * 1024);
 	} clean finally {
