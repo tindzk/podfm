@@ -5,7 +5,7 @@
 extern Terminal term;
 
 static def(void, Init);
-static def(void, OnLogMessage, String msg, Logger_Level level, String file, int line);
+static def(void, OnLogMessage, FmtString msg, Logger_Level level, String file, int line);
 
 Singleton(self);
 
@@ -20,10 +20,10 @@ static def(void, Init) {
 		Logger_Level_Trace);
 }
 
-static def(void, OnLogMessage, String msg, Logger_Level level, String file, int line) {
+static def(void, OnLogMessage, FmtString msg, Logger_Level level, String file, int line) {
 	String color  = $("black");
 	String slevel = Logger_ResolveLevel(level);
-	String sline  = Int32_ToString(line);
+	String sline  = Integer_ToString(line);
 
 	if (level == Logger_Level_Fatal || level == Logger_Level_Crit || level == Logger_Level_Error) {
 		color = $("red");
@@ -36,7 +36,7 @@ static def(void, OnLogMessage, String msg, Logger_Level level, String file, int 
 	Terminal_Controller controller;
 	Terminal_Controller_Init(&controller, &term);
 	Terminal_Controller_Render(&controller,
-		$(".fg[%]{.b{[%]} % .i{(%:%)}}\n"),
+		$(".fg[%]{.b{[%]} $ .i{(%:%)}}\n"),
 		color, slevel, msg, file, sline);
 }
 
