@@ -32,10 +32,7 @@ def(void, Destroy) {
 
 	String_Destroy(&this->name);
 
-	foreach (source, this->sources) {
-		String_Destroy(source);
-	}
-
+	StringArray_Destroy(this->sources);
 	StringArray_Free(this->sources);
 }
 
@@ -61,7 +58,10 @@ def(bool, SetOption, String key, String value) {
 }
 
 def(void, AddSource, String source) {
-	StringArray_Push(&this->sources, String_Clone(source));
+	String *strSource = New(String);
+	*strSource = String_Clone(source);
+
+	StringArray_Push(&this->sources, strSource);
 }
 
 static def(void, DestroyItem, ListingItem *item) {
@@ -72,26 +72,31 @@ static def(void, DestroyItem, ListingItem *item) {
 }
 
 static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *listing) {
-	for (size_t i = 0; i < listing->len; i++) {
+	forward (i, listing->len) {
 		if (this->limit >= 0 && i >= (size_t) this->limit) {
 			call(DestroyItem, listing->buf[i]);
 			continue;
 		}
 
+		String strCur   = Integer_ToString(i + 1);
+		String strTotal = Integer_ToString(listing->len);
+
 		if (listing->buf[i]->id.len == 0) {
 			Logger_Error(this->logger,
 				$("[%/%] The ID is empty!"),
-				Int32_ToString(i + 1),
-				Int32_ToString(listing->len));
+				strCur, strTotal);
 
 			call(DestroyItem, listing->buf[i]);
+
+			String_Destroy(&strCur);
+			String_Destroy(&strTotal);
+
 			continue;
 		}
 
 		Logger_Info(this->logger,
 			$("[%/%] Fetching podcast '%' (%)..."),
-			Int32_ToString(i + 1),
-			Int32_ToString(listing->len),
+			strCur, strTotal,
 			listing->buf[i]->title,
 			listing->buf[i]->id);
 
@@ -99,7 +104,11 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 			Logger_Info(this->logger,
 				$("Already in cache. Skipping..."));
 
+			String_Destroy(&strCur);
+			String_Destroy(&strTotal);
+
 			call(DestroyItem, listing->buf[i]);
+
 			continue;
 		}
 
@@ -115,31 +124,40 @@ static def(void, Fetch, DownloaderInstance dl, CacheInstance cache, Listing *lis
 
 			__exc_rethrow = true;
 		} finally {
+			String_Destroy(&strCur);
+			String_Destroy(&strTotal);
+
 			call(DestroyItem, listing->buf[i]);
 		} tryEnd;
 	}
 }
 
 static def(void, Request, DownloaderInstance dl, CacheInstance cache) {
-	for (size_t i = 0; i < this->sources->len; i++) {
-		String source = this->sources->buf[i];
+	forward (i, this->sources->len) {
+		String source = *this->sources->buf[i];
 
 		Logger_Info(this->logger,
 			$("Requesting listing for source '%'..."), source);
 
 		Listing *listing = Listing_New(128);
 
+		String strTotal = Integer_ToString(listing->len);
+		String strLimit = Integer_ToString(this->limit);
+
 		try {
 			this->provider->getListing(this->instance, source, &listing);
 
 			Logger_Info(this->logger, $("% items found (limit=%)."),
-				Int32_ToString(listing->len),
+				strTotal,
 				(this->limit == -1)
 					? $("no")
-					: Int32_ToString(this->limit));
+					: strLimit);
 
 			call(Fetch, dl, cache, listing);
 		} clean finally {
+			String_Destroy(&strLimit);
+			String_Destroy(&strTotal);
+
 			Listing_Free(listing);
 		} tryEnd;
 	}

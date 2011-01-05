@@ -117,7 +117,7 @@ def(void, GetListing, String name, Listing **res) {
 def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 	TranscribedPodcastItem *data = (TranscribedPodcastItem *) item;
 
-	String prefix = HeapString(0);
+	String prefix = $("");
 
 	if (this->inclDate) {
 		prefix = Utils_GetDate(data->date);
@@ -173,7 +173,7 @@ def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 				$("<div class=\"article-main-authors\">"),
 				$("</div>"));
 
-			String tmp = HeapString(1024);
+			String tmp = String_New(1024);
 
 			String_Append(&tmp, String_Trim(String_Between(resp,
 				$("<div class=\"edition-header-intro\">"),

@@ -12,11 +12,11 @@ def(void, Init, StorageInstance storage, String provider) {
 
 	String_Destroy(&path);
 
-	String s = HeapString(100 * 1024);
+	String s = String_New(100 * 1024);
 
 	File_Read(&this->file, &s);
 
-	if (s.len == s.size) {
+	if (s.len == String_GetSize(&s)) {
 		Logger *logger = Debugger_GetLogger(Debugger_GetInstance());
 
 		Logger_Fatal(logger,
@@ -25,9 +25,7 @@ def(void, Init, StorageInstance storage, String provider) {
 		throw(IndexFileTooLarge);
 	}
 
-	this->items = String_Split(s, '\n');
-
-	StringArray_ToHeap(this->items);
+	this->items = String_Split(&s, '\n');
 
 	String_Destroy(&s);
 }
@@ -48,5 +46,8 @@ def(void, Add, String id) {
 	File_Write(&this->file, line);
 	String_Destroy(&line);
 
-	StringArray_Push(&this->items, String_Clone(id));
+	String *strId = New(String);
+	*strId = String_Clone(id);
+
+	StringArray_Push(&this->items, strId);
 }

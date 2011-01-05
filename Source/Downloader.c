@@ -8,7 +8,7 @@ def(void, Init, StorageInstance storage, String providerId) {
 	this->logger     = Debugger_GetLogger(Debugger_GetInstance());
 	this->storage    = storage;
 	this->providerId = String_Clone(providerId);
-	this->location   = HeapString(0);
+	this->location   = $("");
 }
 
 def(void, Destroy) {
@@ -35,9 +35,9 @@ static sdef(String, Sanitize, String name) {
 	String_ReplaceAll(&out, $("/"),  $("-"));
 	String_ReplaceAll(&out, $("  "), $(" "));
 
-	String_Trim(&out);
+	String_Copy(&out, String_Trim(out));
 
-	if (out.len > 0 && out.buf[out.len - 1] == '.') {
+	if (String_EndsWith(out, $("."))) {
 		out.len--;
 	}
 
@@ -132,7 +132,7 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 
 	size_t prevPercent = 100;
 
-	String buf = HeapString(HTTP_Client_ReadChunkSize);
+	String buf = String_New(HTTP_Client_ReadChunkSize);
 
 	Terminal_ProgressBar pbar;
 	Terminal_ProgressBar_Init(&pbar, &term);
@@ -155,10 +155,14 @@ def(void, Get, String prefix, ListingItem *item, String url) {
 			float gotmb   = (float) got   / 1024 / 1024;
 			float totalmb = (float) total / 1024 / 1024;
 
-			String msg = String_Format(
-				$("Received % MiB of % MiB"),
-				Float_ToString(gotmb,   0.01, '.'),
-				Float_ToString(totalmb, 0.01, '.'));
+			String strGot   = Float_ToString(gotmb,   0.01, '.');
+			String strTotal = Float_ToString(totalmb, 0.01, '.');
+
+			String msg = String_Format($("Received % MiB of % MiB"),
+				strGot, strTotal);
+
+			String_Destroy(&strTotal);
+			String_Destroy(&strGot);
 
 			Terminal_ProgressBar_Render(&pbar, percent, msg);
 

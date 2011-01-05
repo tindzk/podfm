@@ -80,7 +80,7 @@ def(void, GetListing, String url, Listing **res) {
 					$("<title>"),
 					$("</title>")));
 
-		String_Trim(&title);
+		String_Copy(&title, String_Trim(title));
 
 		DefaultPodcastItem *item = New(DefaultPodcastItem);
 
@@ -90,7 +90,8 @@ def(void, GetListing, String url, Listing **res) {
 		};
 
 		item->date    = rfcDate.date;
-		item->podcast = String_Clone(
+		item->podcast =
+			String_Clone(
 				String_Between(s,
 					$("<enclosure url=\""),
 					$("\"")));
@@ -104,7 +105,7 @@ def(void, GetListing, String url, Listing **res) {
 def(void, Fetch, DownloaderInstance dl, ListingItem *item) {
 	DefaultPodcastItem *data = (DefaultPodcastItem *) item;
 
-	String prefix = HeapString(0);
+	String prefix = $("");
 
 	if (this->inclDate) {
 		prefix = Utils_GetDate(data->date);

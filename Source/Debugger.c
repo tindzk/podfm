@@ -38,6 +38,8 @@ static def(void, OnLogMessage, FmtString msg, Logger_Level level, String file, i
 	Terminal_Controller_Render(&controller,
 		$(".fg[%]{.b{[%]} $ .i{(%:%)}}\n"),
 		color, slevel, msg, file, sline);
+
+	String_Destroy(&sline);
 }
 
 def(Logger *, GetLogger) {
