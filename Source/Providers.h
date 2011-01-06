@@ -1,4 +1,4 @@
 #import "ProviderInterface.h"
 
-ExportAnonImplEx(Providers_RSS, Provider);
-ExportAnonImplEx(Providers_RFI, Provider);
+const ProviderInterface* ProviderListing[];
+const size_t ProviderListing_Length;

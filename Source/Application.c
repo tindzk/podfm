@@ -2,14 +2,6 @@
 
 #define self Application
 
-static ProviderInterface* providers[] = {
-	/* French */
-	&Providers_RFI_ProviderImpl,
-
-	/* General */
-	&Providers_RSS_ProviderImpl
-};
-
 def(void, Init, StorageInstance storage) {
 	this->storage   = storage;
 	this->providers = Providers_New(16);
@@ -31,8 +23,8 @@ def(StorageInstance, GetStorage) {
 def(ProviderFacadeInstance, AddProvider, String id) {
 	size_t i;
 
-	for (i = 0; i < nElems(providers); i++) {
-		if (String_Equals(providers[i]->id, id)) {
+	for (i = 0; i < ProviderListing_Length; i++) {
+		if (String_Equals(ProviderListing[i]->id, id)) {
 			goto found;
 		}
 	}
@@ -40,7 +32,7 @@ def(ProviderFacadeInstance, AddProvider, String id) {
 	when (found) {
 		ProviderFacadeInstance provider = ProviderFacade_New();
 
-		ProviderFacade_Init(provider, this->storage, providers[i]);
+		ProviderFacade_Init(provider, this->storage, ProviderListing[i]);
 
 		Providers_Push(&this->providers, provider);
 
