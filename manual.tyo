@@ -1,5 +1,6 @@
 .meta {
 	.title{podfm}
+	.subtitle{Podcast aggregator}
 }
 
 .chapter[Introduction] {
@@ -13,7 +14,7 @@
 .chapter[Requirements] {
 	.list {
 		.item{.url[../Jivai]{Jivai}}
-		.item{.url[../Jivai-Utils]{Jivai-Utils}}
+		.item{.url[../Depend]{Depend}}
 	}
 }
 
@@ -23,7 +24,7 @@
 
 	.command {
 		$ git clone git://github.com/tindzk/podfm.git
-		$ cd podfm; ./build.sh
+		$ cd podfm ; ./build.sh
 	}
 }
 
@@ -151,49 +152,19 @@
 	supported by any specific plugin.
 }
 
-.chapter[License] {
-	.p {
-		Licensed under the EUPL, Version 1.1 only (the
-		.i{"Licence"}); You may not use this work except in
-		compliance with the Licence.
+.chapter[Appendix] {
+	.section[License] {
+		Licensed under the EUPL,  Version 1.1 only (the .i{"Licence"});  You may
+		not use this work except in compliance with the Licence.
 	}
 
-	.p {
-		You may obtain a copy of the Licence at:
-
-		.url[http://ec.europa.eu/idabc/eupl] {
-			http://ec.europa.eu/idabc/eupl
+	.section[See also] {
+		.list {
+			.item{.url[http://flattr.com/thing/69450/podfm-extensible-podcast-aggregator]{Donate}}
+			.item{.url[http://github.com/tindzk/podfm]{Browse source}}
+			.item{.url[http://github.com/tindzk/podfm/issues]{Bug tracker}}
+			.item{.url[http://tindzk.github.com/]{Other projects}}
+			.item{.mail[tim.nieradzik@gmx.de]{Contact}}
 		}
 	}
-
-	.p {
-		Unless required by applicable law or agreed to in writing,
-		software distributed under the Licence is distributed on an
-		"AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-		either express or implied.
-	}
-
-	.p {
-		See the Licence for the specific language governing
-		permissions and limitations under the Licence.
-	}
-}
-
-.chapter[See also] {
-	.list {
-		.item{.url[http://github.com/tindzk/podfm]{Browse source}}
-		.item{.url[http://github.com/tindzk]{GitHub account}}
-	}
-}
-
-.chapter[Donate] {
-	.url[http://flattr.com/thing/69450/podfm-extensible-podcast-aggregator] {
-		.image {
-			http://api.flattr.com/button/button-compact-static-100x17.png
-		}
-	}
-}
-
-.chapter[Contact] {
-	.mail[tim.nieradzik@gmx.de]{Tim Nieradzik}
 }
