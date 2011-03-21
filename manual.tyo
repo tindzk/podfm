@@ -1,14 +1,11 @@
 .meta {
 	.title{podfm}
 	.subtitle{Podcast aggregator}
+	.author{Tim Nieradzik}
 }
 
 .chapter[Introduction] {
-	podfm is an extensible podcatcher for the console. It
-	provides the possibility to write provider-specific plugins.
-	This is especially useful when providers offer additional
-	content such as transcriptions which general-purpose
-	podcatchers usually ignore.
+	.i{podfm} is an extensible podcatcher for the console. It provides the possibility to write provider-specific plugins. This is especially useful when providers offer additional content such as transcriptions which general-purpose podcatchers usually ignore.
 }
 
 .chapter[Requirements] {
@@ -19,33 +16,20 @@
 }
 
 .chapter[Installation] {
-	First make sure that the aforementioned requirements are met.
-	Then checkout and compile the code using:
+	First make sure that the aforementioned requirements are met. Then checkout and compile the code using:
 
 	.command {
 		$ git clone git://github.com/tindzk/podfm.git
-		$ cd podfm ; ./build.sh
+		$ cd podfm ; ./Build.sh
 	}
 }
 
 .chapter[Getting Started] {
-	.p {
-		podfm can download files locally to disk or to an external
-		device like a media player. Therefore, podfm maintains a cache
-		file keeping track of already downloaded podcasts.
-	}
+	podfm can download files locally to disk or to an external device like a media player. Therefore, podfm maintains a cache file keeping track of already downloaded podcasts.
 
-	.p {
-		By default, the configuration path points to the current
-		directory. However, this can be configured in
-		.path{config.h}. But you can also pass a different path via
-		parameter.
-	}
+	By default, the configuration path points to the current directory. However, this can be configured in .path{config.h}. But you can also pass a different path via parameter.
 
-	.p {
-		The configuration path must contain a file called
-		.path{subscriptions.yml} with the following layout:
-	}
+	The configuration path must contain a file called .path{subscriptions.yml} with the following layout:
 
 	.code {
 		providerId1:
@@ -68,9 +52,7 @@
 				rss_apprendre_francais
 		}
 
-		This layout stores the selected podcasts in one directory,
-		.path{rfi}. If this isn't desired, you may also break them
-		up into multiple sections:
+		This layout stores the selected podcasts in one directory, .path{rfi}. If this isn't desired, you may also break them up into multiple sections:
 
 		.code {
 			rfi: RFI Group 1
@@ -82,8 +64,7 @@
 		}
 
 		.warning {
-			If you don't label each section differently, the separation
-			won't have any effect.
+			If you don't label each section differently, the separation won't have any effect.
 		}
 	}
 
@@ -100,20 +81,12 @@
 		}
 
 		.warning {
-			.keyword{url} is necessary because the configuration parser
-			will strip .keyword{http} from the URL when nothing else is
-			prepended.
+			.keyword{url} is necessary because the configuration parser will strip .keyword{http} from the URL when nothing else is prepended.
 		}
 	}
 
 	.section[Limiting downloads] {
-		Some news podcasts have a repertoire which goes back for
-		several weeks. If you only want to hear the latest episode
-		or e.g. the last five episodes, you can put the option
-		.keyword{limit: n} into the podcast group. This will
-		download the first .number{n} episodes and skip the rest.
-		The default value is .number{-1} which means there's no
-		limit.
+		Some news podcasts have a repertoire which goes back for several weeks. If you only want to hear the latest episode or e.g. the last five episodes, you can put the option .keyword{limit: n} into the podcast group. This will download the first .number{n} episodes and skip the rest. The default value is .number{-1} which means there's no limit.
 
 		.code {
 			rss: tagesschau
@@ -123,9 +96,7 @@
 	}
 
 	.section[Date duplication in file name] {
-		The titles may already contain the date. If this is the
-		case, the downloaded file name will contain the date twice.
-		This can be prevented by using the option .keyword{date: no}.
+		The titles may already contain the date. If this is the case, the downloaded file name will contain the date twice. This can be prevented by using the option .keyword{date: no}.
 	}
 
 	.section[Synchronize] {
@@ -135,8 +106,7 @@
 			$ ./podfm.bin /mnt/ipod
 		}
 
-		Consequently, the cache file as well as the podcasts will be
-		stored in the given path.
+		Consequently, the cache file as well as the podcasts will be stored in the given path.
 	}
 }
 
@@ -148,14 +118,12 @@
 		.item{RSS (.keyword{rss})}
 	}
 
-	The RSS plugin only exists to cover those providers which aren't
-	supported by any specific plugin.
+	The RSS plugin only exists to cover those providers which aren't supported by any specific plugin.
 }
 
 .chapter[Appendix] {
 	.section[License] {
-		Licensed under the EUPL,  Version 1.1 only (the .i{"Licence"});  You may
-		not use this work except in compliance with the Licence.
+		Licensed under the EUPL, Version 1.1 only (the .i{"Licence"}); You may not use this work except in compliance with the Licence.
 	}
 
 	.section[See also] {
